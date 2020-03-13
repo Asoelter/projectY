@@ -1,0 +1,7 @@
+C:/Users/adamd/source/repos/projectY/out/build/x64-Release/CMakeFiles/ALL_BUILD.dir
+C:/Users/adamd/source/repos/projectY/out/build/x64-Release/CMakeFiles/ZERO_CHECK.dir
+C:/Users/adamd/source/repos/projectY/out/build/x64-Release/projectY/CMakeFiles/projectY.dir
+C:/Users/adamd/source/repos/projectY/out/build/x64-Release/projectY/gui/CMakeFiles/gui.dir
+C:/Users/adamd/source/repos/projectY/out/build/x64-Release/projectY/gui/CMakeFiles/ALL_BUILD.dir
+C:/Users/adamd/source/repos/projectY/out/build/x64-Release/projectY/containers/CMakeFiles/ALL_BUILD.dir
+C:/Users/adamd/source/repos/projectY/out/build/x64-Release/projectY/util/CMakeFiles/ALL_BUILD.dir
