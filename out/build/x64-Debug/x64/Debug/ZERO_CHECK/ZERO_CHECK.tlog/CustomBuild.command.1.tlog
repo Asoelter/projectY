@@ -1,6 +1,6 @@
-^C:\USERS\ADAMD\SOURCE\REPOS\PROJECTY\OUT\BUILD\X64-DEBUG\CMAKEFILES\FB88F2A025F244DA6E4A74A2383E6359\GENERATE.STAMP.RULE
+^C:\USERS\SOELT\SOURCE\REPOS\PROJECTY\OUT\BUILD\X64-DEBUG\CMAKEFILES\24F35379A4A61AB7E0573D6C7E88F48A\GENERATE.STAMP.RULE
 setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/adamd/source/repos/projectY -BC:/Users/adamd/source/repos/projectY/out/build/x64-Debug --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/adamd/source/repos/projectY/out/build/x64-Debug/projectY.sln
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/soelt/source/repos/projectY -BC:/Users/soelt/source/repos/projectY/out/build/x64-Debug --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/soelt/source/repos/projectY/out/build/x64-Debug/projectY.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

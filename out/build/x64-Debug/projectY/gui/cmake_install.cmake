@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/adamd/source/repos/projectY/projectY/gui
+# Install script for directory: C:/Users/soelt/source/repos/projectY/projectY/gui
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/adamd/source/repos/projectY/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/soelt/source/repos/projectY/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

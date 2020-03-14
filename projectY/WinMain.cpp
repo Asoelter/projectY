@@ -60,7 +60,7 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
     ID3D11DeviceContext* context;
     IDXGISwapChain* swapchain;
 
-    UINT flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
+    auto flags = static_cast<UINT>(D3D11_CREATE_DEVICE_SINGLETHREADED);
 
 #ifdef DEBUG
     flags |= D3D11_CREATE_DEVICE_DEBUG;
@@ -70,7 +70,7 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
         nullptr, 
         D3D_DRIVER_TYPE_HARDWARE, 
         nullptr, 
-        D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_SINGLETHREADED,  
+        flags,  
         featureLevels, 
         2, 
         D3D11_SDK_VERSION, 
@@ -83,11 +83,7 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
 
     if (FAILED(result))
     {
-        if (result == E_INVALIDARG)
-        {
-            MessageBox(NULL, "invalid arg", "invalid arg", 0);
-            return 0;
-        }
+        MessageBox(NULL, "unknown error", "unknown error", 0);
     }
 
     ID3D11RenderTargetView* view;
@@ -100,14 +96,15 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
         return 0;
     }
 
-    device->CreateRenderTargetView(backBuffer, 0, &view);
+    device->CreateRenderTargetView(backBuffer, nullptr, &view);
     backBuffer->Release();
 
     while (window.open())
     {
         window.update();
-        //swapchain->Present(1u, 0);
+        swapchain->Present(1u, 0);
     }
 
     return 0;
 }
+

@@ -22,9 +22,7 @@ Window::Window(size_t width, size_t height, const std::string& title)
     wndClass_.hInstance = hInstance;
     wndClass_.hIcon = LoadIcon(NULL, IDI_APPLICATION);
     wndClass_.hCursor = LoadCursor(NULL, IDC_ARROW);
-    //wndClass_.hbrBackground = CreateSolidBrush(RGB(50, 50, 50));
-    wndClass_.hbrBackground = nullptr;
-    wndClass_.hbrBackground = nullptr;
+    wndClass_.hbrBackground = CreateSolidBrush(RGB(50, 50, 50));
     wndClass_.lpszMenuName = nullptr;
     wndClass_.lpszClassName = title.c_str();
 
@@ -80,7 +78,7 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
             height_ = HIWORD(lParam);
             return 0;
         }break;
-        /*case WM_PAINT:
+        case WM_PAINT:
         {
             PAINTSTRUCT ps;
             auto hdc = BeginPaint(hwnd, &ps);
@@ -90,7 +88,7 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
             TextOut(hdc, 5, 5, msg.c_str(), static_cast<int>(msg.size()));
             EndPaint(hwnd, &ps);
             return 0;
-        }break;*/
+        }break;
         case WM_COMMAND:
         {
             for (auto button : buttons_)

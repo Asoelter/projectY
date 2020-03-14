@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/adamd/source/repos/projectY/projectY
+# Install script for directory: C:/Users/soelt/source/repos/projectY/projectY
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/adamd/source/repos/projectY/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/soelt/source/repos/projectY/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,9 +34,9 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/adamd/source/repos/projectY/out/build/x64-Debug/projectY/gui/cmake_install.cmake")
-  include("C:/Users/adamd/source/repos/projectY/out/build/x64-Debug/projectY/containers/cmake_install.cmake")
-  include("C:/Users/adamd/source/repos/projectY/out/build/x64-Debug/projectY/util/cmake_install.cmake")
+  include("C:/Users/soelt/source/repos/projectY/out/build/x64-Debug/projectY/gui/cmake_install.cmake")
+  include("C:/Users/soelt/source/repos/projectY/out/build/x64-Debug/projectY/containers/cmake_install.cmake")
+  include("C:/Users/soelt/source/repos/projectY/out/build/x64-Debug/projectY/util/cmake_install.cmake")
 
 endif()
 

@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\adamd\source\repos\projectY\projectY\WinMain.cpp">
+    <ClCompile Include="C:\Users\soelt\source\repos\projectY\projectY\WinMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\adamd\source\repos\projectY\projectY\util\ywin.h">
+    <ClInclude Include="C:\Users\soelt\source\repos\projectY\projectY\util\ywin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\adamd\source\repos\projectY\projectY\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\soelt\source\repos\projectY\projectY\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{6D5569AC-CEEC-332B-AAF8-F61797BB6905}</UniqueIdentifier>
+      <UniqueIdentifier>{58FABC38-A55B-3799-9837-5F898F724D38}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{11B8C2A1-86EF-3585-815C-7A49E3E70D82}</UniqueIdentifier>
+      <UniqueIdentifier>{B0240B87-8FED-31CD-ABEF-D6BA7703FA9C}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
