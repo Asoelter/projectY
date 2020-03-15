@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include <gui/window.h>
+#include <util/uuid.h>
 
 #include <d3d11.h>
 
@@ -30,8 +31,8 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
 
     DXGI_MODE_DESC modeDescription;
 
-    modeDescription.Width = window.width();
-    modeDescription.Height = window.height();
+    modeDescription.Width = static_cast<UINT>(window.width());
+    modeDescription.Height = static_cast<UINT>(window.height());
     modeDescription.RefreshRate = { 60, 1 }; //60 frames per second
     modeDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     modeDescription.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -98,6 +99,10 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
 
     device->CreateRenderTargetView(backBuffer, nullptr, &view);
     backBuffer->Release();
+
+    Uuid id;
+
+    MessageBox(NULL, id.to_string().c_str(), id.to_string().c_str(), 0);
 
     while (window.open())
     {

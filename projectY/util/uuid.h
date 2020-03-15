@@ -1,6 +1,9 @@
 #ifndef UUID_H
 #define UUID_H
 
+#include "ywin.h"
+#include <d3d11.h>
+
 #include <string>
 
 class Uuid
