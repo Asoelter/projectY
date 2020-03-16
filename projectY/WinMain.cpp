@@ -87,7 +87,9 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
         MessageBox(NULL, "unknown error", "unknown error", 0);
     }
 
-    ID3D11RenderTargetView* view;
+    //This basically allows Direct3D to 
+    //draw to the backbuffer
+    ID3D11RenderTargetView* renderView;
     ID3D11Texture2D* backBuffer;
     swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D),reinterpret_cast<void**>(&backBuffer));
 
@@ -97,12 +99,48 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
         return 0;
     }
 
-    device->CreateRenderTargetView(backBuffer, nullptr, &view);
+    device->CreateRenderTargetView(backBuffer, nullptr, &renderView);
     backBuffer->Release();
 
-    Uuid id;
+    D3D11_TEXTURE2D_DESC depthBufferDesc;
 
-    MessageBox(NULL, id.to_string().c_str(), id.to_string().c_str(), 0);
+    depthBufferDesc.Width = window.width();
+    depthBufferDesc.Height = window.height();
+    depthBufferDesc.MipLevels = 1;
+    depthBufferDesc.ArraySize = 1;
+    depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthBufferDesc.SampleDesc = sampleDescription;
+    depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthBufferDesc.CPUAccessFlags = NULL;
+    depthBufferDesc.MiscFlags = NULL;
+
+    ID3D11Texture2D* depthBuffer;
+    ID3D11DepthStencilView* depthView;
+
+    device->CreateTexture2D(
+        &depthBufferDesc, // Description of texture to create.
+        nullptr,
+        &depthBuffer); // Return pointer to depth/stencil buffer.
+
+    assert(depthBuffer);
+
+    device->CreateDepthStencilView(
+        depthBuffer, // Resource we want to create a view to.
+        nullptr,
+        &depthView); // Return depth/stencil view
+    context->OMSetRenderTargets(1, &renderView, depthView);
+
+    D3D11_VIEWPORT viewport;
+
+    viewport.TopLeftX = 0.0f;
+    viewport.TopLeftY = 0.0f;
+    viewport.Width    = window.width();
+    viewport.Height   = window.height();
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+
+    context->RSSetViewports(1, &viewport);
 
     while (window.open())
     {
