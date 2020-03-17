@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <DirectXMath.h>
 
 #include <cassert>
 
@@ -6,6 +7,12 @@
 #include <util/uuid.h>
 
 #include <d3d11.h>
+
+struct Vertex
+{
+    DirectX::XMFLOAT4 position;
+    DirectX::XMFLOAT3 color;
+};
 
 int WINAPI WinMain(_In_     HINSTANCE hInstance, 
                    _In_opt_ HINSTANCE hPrevInstance,
@@ -104,8 +111,8 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
 
     D3D11_TEXTURE2D_DESC depthBufferDesc;
 
-    depthBufferDesc.Width = window.width();
-    depthBufferDesc.Height = window.height();
+    depthBufferDesc.Width = static_cast<UINT>(window.width());
+    depthBufferDesc.Height = static_cast<UINT>(window.height());
     depthBufferDesc.MipLevels = 1;
     depthBufferDesc.ArraySize = 1;
     depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -135,12 +142,18 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
 
     viewport.TopLeftX = 0.0f;
     viewport.TopLeftY = 0.0f;
-    viewport.Width    = window.width();
-    viewport.Height   = window.height();
+    viewport.Width    = static_cast<UINT>(window.width());
+    viewport.Height   = static_cast<UINT>(window.height());
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
 
     context->RSSetViewports(1, &viewport);
+
+    D3D11_INPUT_ELEMENT_DESC dataDescription[2] = {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0}
+    };
+
 
     while (window.open())
     {
