@@ -55,6 +55,7 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
     swapDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; //discard back buffer after use
     swapDescription.Flags = 0;
 
+    //TODO(asoelter): move to ComPtr's for pointer types
     D3D_FEATURE_LEVEL featureLevels[] = {D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0};
     ID3D11Device* device;
     D3D_FEATURE_LEVEL selectedFeatureLevel;
@@ -145,7 +146,6 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
     while (window.open())
     {
         window.update();
-        swapchain->Present(1u, 0);
     }
 
     return 0;
