@@ -53,6 +53,7 @@ Window::~Window()
 bool Window::open() noexcept
 {
     return GetMessage(&msg_, hwnd_, 0, 0);
+    //return PeekMessage(&msg_, hwnd_, 0, 0, 0);
 }
 
 void Window::update() const noexcept

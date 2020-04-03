@@ -1,10 +1,14 @@
 #include <Windows.h>
 #include <DirectXMath.h>
+#include <d3dcompiler.h>
+#include <wrl.h>
 
 #include <cassert>
 
 #include <gui/window.h>
+
 #include <util/uuid.h>
+#include <util/error_printer.h>
 
 #include <d3d11.h>
 
@@ -13,6 +17,8 @@ struct Vertex
     DirectX::XMFLOAT4 position;
     DirectX::XMFLOAT3 color;
 };
+
+#define BREAK_ON_FAIL(res) assert(!FAILED(res));
 
 int WINAPI WinMain(_In_     HINSTANCE hInstance, 
                    _In_opt_ HINSTANCE hPrevInstance,
@@ -90,16 +96,14 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
         &context
     );
 
-    if (FAILED(result))
-    {
-        MessageBox(NULL, "unknown error", "unknown error", 0);
-    }
+    BREAK_ON_FAIL(result);
 
     //This basically allows Direct3D to 
     //draw to the backbuffer
     ID3D11RenderTargetView* renderView;
     ID3D11Texture2D* backBuffer;
-    swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D),reinterpret_cast<void**>(&backBuffer));
+    result = swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D),reinterpret_cast<void**>(&backBuffer));
+    BREAK_ON_FAIL(result);
 
     if (!backBuffer)
     {
@@ -107,7 +111,8 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
         return 0;
     }
 
-    device->CreateRenderTargetView(backBuffer, nullptr, &renderView);
+    result = device->CreateRenderTargetView(backBuffer, nullptr, &renderView);
+    BREAK_ON_FAIL(result);
     backBuffer->Release();
 
     D3D11_TEXTURE2D_DESC depthBufferDesc;
@@ -126,17 +131,20 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
     ID3D11Texture2D* depthBuffer;
     ID3D11DepthStencilView* depthView;
 
-    device->CreateTexture2D(
+    result = device->CreateTexture2D(
         &depthBufferDesc, // Description of texture to create.
         nullptr,
         &depthBuffer); // Return pointer to depth/stencil buffer.
 
+    BREAK_ON_FAIL(result);
     assert(depthBuffer);
 
-    device->CreateDepthStencilView(
+    result = device->CreateDepthStencilView(
         depthBuffer, // Resource we want to create a view to.
         nullptr,
         &depthView); // Return depth/stencil view
+    BREAK_ON_FAIL(result);
+
     context->OMSetRenderTargets(1, &renderView, depthView);
 
     D3D11_VIEWPORT viewport;
@@ -150,15 +158,106 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
 
     context->RSSetViewports(1, &viewport);
 
-    D3D11_INPUT_ELEMENT_DESC dataDescription[2] = {
-        {"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0}
+    Vertex vertices[3] = {
+        {DirectX::XMFLOAT4(0.0f,  0.5f, 0.5f, 1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f)},
+        {DirectX::XMFLOAT4( 0.5f, -0.5f, 0.5f, 1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f)},
+        {DirectX::XMFLOAT4(-0.5f,  0.0f, 0.5f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)}
     };
 
+    D3D11_INPUT_ELEMENT_DESC dataDescription[2] = {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0}
+    };
+
+    D3D11_BUFFER_DESC vbDesc = {};
+
+    vbDesc.ByteWidth = sizeof(vertices);
+    vbDesc.Usage = D3D11_USAGE_DEFAULT;
+    vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vbDesc.CPUAccessFlags = 0;
+    vbDesc.MiscFlags = 0;
+    vbDesc.StructureByteStride = 0;
+
+    D3D11_SUBRESOURCE_DATA srData = {};
+
+    srData.pSysMem = vertices;
+
+    Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+    result = device->CreateBuffer(&vbDesc, &srData, &vertexBuffer);
+    BREAK_ON_FAIL(result);
+
+    UINT stride = sizeof(Vertex);
+    UINT offset = 0;
+    context->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+
+    Microsoft::WRL::ComPtr<ID3DBlob> blob;
+    Microsoft::WRL::ComPtr<ID3DBlob> errmsg;
+    auto readRes = D3DCompileFromFile(
+        L"../../../../../projectY/res/shaders/pixel.hlsl",
+        nullptr,
+        nullptr,
+        "main",
+        "ps_5_0",
+        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+        0,
+        &blob,
+        &errmsg
+    );
+
+    BREAK_ON_FAIL(result);
+
+    if (errmsg)
+    {
+        const char* msg = (const char *)errmsg->GetBufferPointer();
+        MessageBox(NULL, msg, msg, 0);
+    }
+
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
+    result = device->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &pixelShader);
+    BREAK_ON_FAIL(result);
+
+    result = D3DCompileFromFile(
+        L"../../../../../projectY/res/shaders/vertex.hlsl", 
+        nullptr, 
+        nullptr, 
+        "main", 
+        "vs_5_0", 
+        D3DCOMPILE_DEBUG, 
+        0, 
+        &blob, 
+        &errmsg);
+
+    BREAK_ON_FAIL(result);
+
+    if (errmsg)
+    {
+        const char* msg = (const char *)errmsg->GetBufferPointer();
+        MessageBox(NULL, msg, msg, 0);
+    }
+
+    Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
+    result = device->CreateInputLayout(dataDescription, 2, blob->GetBufferPointer(), blob->GetBufferSize(), &inputLayout);
+    BREAK_ON_FAIL(result);
+
+    Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
+    device->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &vertexShader);
+
+    context->VSSetShader(vertexShader.Get(), nullptr, 0);
+    context->PSSetShader(pixelShader.Get(), nullptr, 0);
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    context->IASetInputLayout(inputLayout.Get());
+
+    constexpr FLOAT color[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+    assert(renderView);
 
     while (window.open())
     {
         window.update();
+        context->ClearRenderTargetView(renderView, color);
+        context->Draw(3u, 0);
+        swapchain->Present(1u, 0u);
+        OutputDebugString("debug info\n");
     }
 
     return 0;
