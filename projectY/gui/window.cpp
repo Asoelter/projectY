@@ -6,7 +6,6 @@ namespace gui
 Window::Window(size_t width, size_t height, const std::string& title)
     : wndClass_({ 0 })
     , hwnd_(0)
-    , msg_({ 0 })
     , width_(width)
     , height_(height)
     , title_(title)
@@ -50,16 +49,17 @@ Window::~Window()
 }
 
 [[nodiscard]]
-bool Window::open() noexcept
+bool Window::open() const noexcept
 {
-    return GetMessage(&msg_, hwnd_, 0, 0);
-    //return PeekMessage(&msg_, hwnd_, 0, 0, 0);
+    return open_;
 }
 
-void Window::update() const noexcept
+void Window::update() noexcept
 {
-    TranslateMessage(&msg_);
-    DispatchMessage(&msg_);
+    MSG msg;
+    GetMessage(&msg, hwnd_, 0, 0);
+    TranslateMessage(&msg);
+    DispatchMessage(&msg);
 }
 
 void Window::attach(Button&& button) noexcept
@@ -79,7 +79,7 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
             height_ = HIWORD(lParam);
             return 0;
         }break;
-        case WM_PAINT:
+        /*case WM_PAINT:
         {
             PAINTSTRUCT ps;
             auto hdc = BeginPaint(hwnd, &ps);
@@ -89,7 +89,7 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
             TextOut(hdc, 5, 5, msg.c_str(), static_cast<int>(msg.size()));
             EndPaint(hwnd, &ps);
             return 0;
-        }break;
+        }break;*/
         case WM_COMMAND:
         {
             for (auto button : buttons_)
@@ -102,6 +102,11 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
 
             return 0;
         }break;
+        case WM_CLOSE:
+        {
+            open_ = false;
+        }break;
+
     }
 
     return DefWindowProc(hwnd, message, wParam, lParam);

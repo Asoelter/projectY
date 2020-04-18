@@ -18,8 +18,8 @@ public:
 
     //TODO(asoelter): consider a different name like "isProcessingMessages"
     [[nodiscard]]
-    bool open()  noexcept;
-    void update() const noexcept;
+    bool open() const noexcept;
+    void update() noexcept;
 
     void attach(Button&& button) noexcept;
 
@@ -41,7 +41,6 @@ private:
 private:
     WNDCLASS            wndClass_;
     HWND                hwnd_;
-    MSG                 msg_;
     size_t              width_;
     size_t              height_;
     std::string         title_;

@@ -25,6 +25,10 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
                    _In_     PSTR szCmdLine, 
                    _In_     int iCmdShow)
 {
+#if defined(DEBUG) | defined(_DEBUG)
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+
     auto window = gui::Window(1000, 750, "Main window");
 
     gui::Button::Descriptor desc;
@@ -101,8 +105,8 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
     //This basically allows Direct3D to 
     //draw to the backbuffer
     ID3D11RenderTargetView* renderView;
-    ID3D11Texture2D* backBuffer;
-    result = swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D),reinterpret_cast<void**>(&backBuffer));
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
+    result = swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer);
     BREAK_ON_FAIL(result);
 
     if (!backBuffer)
@@ -111,9 +115,8 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
         return 0;
     }
 
-    result = device->CreateRenderTargetView(backBuffer, nullptr, &renderView);
+    result = device->CreateRenderTargetView(backBuffer.Get(), nullptr, &renderView);
     BREAK_ON_FAIL(result);
-    backBuffer->Release();
 
     D3D11_TEXTURE2D_DESC depthBufferDesc;
 
@@ -142,7 +145,8 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
     result = device->CreateDepthStencilView(
         depthBuffer, // Resource we want to create a view to.
         nullptr,
-        &depthView); // Return depth/stencil view
+        &depthView); // Return depth/stencil view
+
     BREAK_ON_FAIL(result);
 
     context->OMSetRenderTargets(1, &renderView, depthView);
@@ -159,9 +163,9 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
     context->RSSetViewports(1, &viewport);
 
     Vertex vertices[3] = {
-        {DirectX::XMFLOAT4(0.0f,  0.5f, 0.5f, 1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f)},
+        {DirectX::XMFLOAT4( 0.0f,  0.5f, 0.5f, 1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f)},
         {DirectX::XMFLOAT4( 0.5f, -0.5f, 0.5f, 1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f)},
-        {DirectX::XMFLOAT4(-0.5f,  0.0f, 0.5f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)}
+        {DirectX::XMFLOAT4(-0.5f, -0.5f, 0.5f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)}
     };
 
     D3D11_INPUT_ELEMENT_DESC dataDescription[2] = {
@@ -176,7 +180,7 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
     vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vbDesc.CPUAccessFlags = 0;
     vbDesc.MiscFlags = 0;
-    vbDesc.StructureByteStride = 0;
+    vbDesc.StructureByteStride = sizeof(Vertex);
 
     D3D11_SUBRESOURCE_DATA srData = {};
 
@@ -192,8 +196,8 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
 
     Microsoft::WRL::ComPtr<ID3DBlob> blob;
     Microsoft::WRL::ComPtr<ID3DBlob> errmsg;
-    auto readRes = D3DCompileFromFile(
-        L"../../../../../projectY/res/shaders/pixel.hlsl",
+    result = D3DCompileFromFile(
+        L"../../../../projectY/res/shaders/pixel.hlsl",
         nullptr,
         nullptr,
         "main",
@@ -217,12 +221,12 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
     BREAK_ON_FAIL(result);
 
     result = D3DCompileFromFile(
-        L"../../../../../projectY/res/shaders/vertex.hlsl", 
+        L"../../../../projectY/res/shaders/vertex.hlsl", 
         nullptr, 
         nullptr, 
         "main", 
         "vs_5_0", 
-        D3DCOMPILE_DEBUG, 
+        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 
         0, 
         &blob, 
         &errmsg);
@@ -240,7 +244,8 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
     BREAK_ON_FAIL(result);
 
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-    device->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &vertexShader);
+    result = device->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &vertexShader);
+    BREAK_ON_FAIL(result);
 
     context->VSSetShader(vertexShader.Get(), nullptr, 0);
     context->PSSetShader(pixelShader.Get(), nullptr, 0);
@@ -257,7 +262,7 @@ int WINAPI WinMain(_In_     HINSTANCE hInstance,
         context->ClearRenderTargetView(renderView, color);
         context->Draw(3u, 0);
         swapchain->Present(1u, 0u);
-        OutputDebugString("debug info\n");
+        //OutputDebugString("debug info\n");
     }
 
     return 0;
