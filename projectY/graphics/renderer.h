@@ -16,10 +16,10 @@ public:
     void bind(const VertexBuffer& buffer);
 
     //temp functions to rough in the renderer
-    ID3D11Device* device()            { return device_.Get(); }
-    IDXGISwapChain* swapchain()       { return swapchain_.Get(); }
-    ID3D11DeviceContext* context()    { return context_.Get(); }
-    ID3D11RenderTargetView* target()  { return target_.Get(); }
+    Microsoft::WRL::ComPtr<ID3D11Device>           device()    { return device_; }
+    Microsoft::WRL::ComPtr<IDXGISwapChain>         swapchain() { return swapchain_; }
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext>    context()   { return context_; }
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> target()    { return target_; }
 private:
     Microsoft::WRL::ComPtr<ID3D11Device>            device_;
     Microsoft::WRL::ComPtr<IDXGISwapChain>          swapchain_;

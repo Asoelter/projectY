@@ -5,6 +5,8 @@
 
 #include <cassert>
 
+#include <graphics/renderer.h>
+
 #include <gui/window.h>
 
 #include <util/uuid.h>
@@ -28,99 +30,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-    /*WNDCLASSEX wc = { 0 };
-    wc.cbSize = sizeof(wc);
-    wc.style = CS_OWNDC;
-    wc.lpfnWndProc = WndProc;
-    wc.cbClsExtra = 0;
-    wc.cbWndExtra = 0;
-    wc.hInstance = hInstance;
-    wc.hIcon = nullptr;
-    wc.hCursor = nullptr;
-    wc.hbrBackground = nullptr;
-    wc.lpszMenuName = nullptr;
-    wc.lpszClassName = "wndClass";
-    wc.hIconSm = nullptr;
-    RegisterClassEx(&wc);
-
-    RECT wr;
-    wr.left = 100;
-    wr.right = width + wr.left;
-    wr.top = 100;
-    wr.bottom = height + wr.top;
-    if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
-    {
-        assert(false);
-    }
-    // create window & get hWnd
-    HWND hwnd = CreateWindow(
-        "wndClass", "Window",
-        WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-        CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
-        nullptr, nullptr, hInstance, nullptr
-    );
-    // check for error
-    if (!hwnd)
-    {
-        assert(false);
-    }
-    // newly created windows start off as hidden
-    ShowWindow(hwnd, SW_SHOWDEFAULT);*/
-    // create graphics object
-
     auto window = gui::Window(width, height, "draw window");
     auto hwnd = window.handle();
 
-    DXGI_SWAP_CHAIN_DESC sd = {};
-    sd.BufferDesc.Width = 0;
-    sd.BufferDesc.Height = 0;
-    sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 0;
-    sd.BufferDesc.RefreshRate.Denominator = 0;
-    sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-    sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    sd.SampleDesc.Count = 1;
-    sd.SampleDesc.Quality = 0;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.BufferCount = 1;
-    sd.OutputWindow = hwnd;
-    sd.Windowed = TRUE;
-    sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-    sd.Flags = 0;
+    auto renderer = Renderer(window);
 
-    UINT swapCreateFlags = 0u;
-#ifdef DEBUG
-    swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
-
-    Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
-    Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap;
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
-    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
-
-    // create device and front/back buffers, and swap chain and rendering context
-    D3D11CreateDeviceAndSwapChain(
-        nullptr,
-        D3D_DRIVER_TYPE_HARDWARE,
-        nullptr,
-        swapCreateFlags,
-        nullptr,
-        0,
-        D3D11_SDK_VERSION,
-        &sd,
-        &pSwap,
-        &pDevice,
-        nullptr,
-        &pContext
-    );
-    // gain access to texture subresource in swap chain (back buffer)
-    Microsoft::WRL::ComPtr<ID3D11Resource> pBackBuffer;
-    pSwap->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer);
-    pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget);
-
-    const float red = 0.2f;
-    const float green = 0.3f;
-    const float blue = 0.4f;
+    Microsoft::WRL::ComPtr<ID3D11Device> pDevice = renderer.device();
+    Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap = renderer.swapchain();
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext = renderer.context();
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget = renderer.target();
 
     /////////////////////////////////
     //create and bind vertex buffer//
@@ -230,6 +148,10 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     vp.TopLeftX = 0;
     vp.TopLeftY = 0;
     pContext->RSSetViewports(1u, &vp);
+
+    const float red = 0.2f;
+    const float green = 0.3f;
+    const float blue = 0.4f;
 
     MSG msg;
     while (true)

@@ -15,6 +15,11 @@ include_directories(gui)
 target_link_libraries(${PROJECT_NAME} gui)
 target_include_directories(${PROJECT_NAME} PUBLIC gui)
 
+add_subdirectory(graphics)
+include_directories(graphics)
+target_link_libraries(${PROJECT_NAME} graphics)
+target_include_directories(${PROJECT_NAME} PUBLIC graphics)
+
 add_subdirectory(containers)
 include_directories(containers)
 target_link_libraries(${PROJECT_NAME} containers)

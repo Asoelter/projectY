@@ -4,7 +4,7 @@ VertexBuffer::VertexBuffer(const std::vector<float> data, const std::vector<Elem
 {
 }
 
-void VertexBuffer::bind() const
+void VertexBuffer::bind(ID3D11DeviceContext* context) const
 {
 }
 

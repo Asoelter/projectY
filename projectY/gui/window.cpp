@@ -155,3 +155,45 @@ LRESULT CALLBACK Window::forwardMsg(HWND hwnd, UINT message, WPARAM wParam, LPAR
 }
 
 }
+//NOTE(asoelter) we should make the construct use
+//extended win32 functionality like the code 
+//snippet shown below
+
+    /*WNDCLASSEX wc = { 0 };
+    wc.cbSize = sizeof(wc);
+    wc.style = CS_OWNDC;
+    wc.lpfnWndProc = WndProc;
+    wc.cbClsExtra = 0;
+    wc.cbWndExtra = 0;
+    wc.hInstance = hInstance;
+    wc.hIcon = nullptr;
+    wc.hCursor = nullptr;
+    wc.hbrBackground = nullptr;
+    wc.lpszMenuName = nullptr;
+    wc.lpszClassName = "wndClass";
+    wc.hIconSm = nullptr;
+    RegisterClassEx(&wc);
+
+    RECT wr;
+    wr.left = 100;
+    wr.right = width + wr.left;
+    wr.top = 100;
+    wr.bottom = height + wr.top;
+    if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
+    {
+        assert(false);
+    }
+    // create window & get hWnd
+    HWND hwnd = CreateWindow(
+        "wndClass", "Window",
+        WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+        CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
+        nullptr, nullptr, hInstance, nullptr
+    );
+    // check for error
+    if (!hwnd)
+    {
+        assert(false);
+    }
+    // newly created windows start off as hidden
+    ShowWindow(hwnd, SW_SHOWDEFAULT);*/

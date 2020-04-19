@@ -2,6 +2,7 @@
 #define VERTEX_BUFFER_H
 
 #include <d3d11.h>
+#include <wrl.h>
 
 #include <string>
 #include <vector>
@@ -27,11 +28,15 @@ public:
 
     VertexBuffer(const std::vector<float> data, const std::vector<ElementDescriptor>& desc);
 
-    void bind() const;
+    void bind(ID3D11DeviceContext* context) const;
     void unbind() const;
+
+    bool hasRawbuffer() const noexcept;
+    void createRawBuffer(ID3D11Device* device);
 private:
     std::vector<float>             data_;
     std::vector<ElementDescriptor> descriptors_;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> buffer_;
 };
 
 #endif //VERTEX_BUFFER_H
