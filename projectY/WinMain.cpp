@@ -17,8 +17,8 @@
 
 struct Vertex
 {
-    DirectX::XMFLOAT2 position;
-    DirectX::XMFLOAT3 color;
+    DirectX::XMFLOAT4 position;
+    DirectX::XMFLOAT4 color;
 };
 
 static constexpr auto width = 800u;
@@ -28,7 +28,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-    WNDCLASSEX wc = { 0 };
+    /*WNDCLASSEX wc = { 0 };
     wc.cbSize = sizeof(wc);
     wc.style = CS_OWNDC;
     wc.lpfnWndProc = WndProc;
@@ -65,8 +65,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         assert(false);
     }
     // newly created windows start off as hidden
-    ShowWindow(hwnd, SW_SHOWDEFAULT);
+    ShowWindow(hwnd, SW_SHOWDEFAULT);*/
     // create graphics object
+
+    auto window = gui::Window(width, height, "draw window");
+    auto hwnd = window.handle();
 
     DXGI_SWAP_CHAIN_DESC sd = {};
     sd.BufferDesc.Width = 0;
@@ -86,12 +89,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     sd.Flags = 0;
 
     UINT swapCreateFlags = 0u;
-#ifndef NDEBUG
+#ifdef DEBUG
     swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
-
-    // for checking results of d3d functions
-    HRESULT hr;
 
     Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
     Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap;
@@ -127,9 +127,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     /////////////////////////////////
     const Vertex vertices[] =
     {
-        DirectX::XMFLOAT2{ 0.0f, 0.5f}, DirectX::XMFLOAT3{1.0f,0.0f,0.0f},
-        DirectX::XMFLOAT2{ 0.5f,-0.5f}, DirectX::XMFLOAT3{0.0f,1.0f,0.0f},
-        DirectX::XMFLOAT2{-0.5f,-0.5f}, DirectX::XMFLOAT3{0.0f,0.0f,1.0f}
+        DirectX::XMFLOAT4{ 0.0f, 0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{1.0f,0.0f,0.0f, 1.0f},
+        DirectX::XMFLOAT4{ 0.5f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,1.0f,0.0f, 1.0f},
+        DirectX::XMFLOAT4{-0.5f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,0.0f,1.0f, 1.0f}
     };
 
     // create vertex buffer (1 2d triangle at center of screen)
@@ -200,8 +200,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
     const D3D11_INPUT_ELEMENT_DESC ied[] =
     {
-        { "Position",0,DXGI_FORMAT_R32G32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-        { "Color",0,DXGI_FORMAT_R32G32B32_FLOAT,0,8u,D3D11_INPUT_PER_VERTEX_DATA,0 },
+        { "Position",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+        { "Color",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,16u,D3D11_INPUT_PER_VERTEX_DATA,0 },
     };
     GFX_THROW_INFO(pDevice->CreateInputLayout(
         ied, (UINT)std::size(ied),

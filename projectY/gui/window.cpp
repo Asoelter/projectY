@@ -1,6 +1,7 @@
 #include "window.h"
 #include "window.h"
 
+
 namespace gui
 {
 Window::Window(size_t width, size_t height, const std::string& title)
@@ -14,6 +15,7 @@ Window::Window(size_t width, size_t height, const std::string& title)
 {
     const auto hInstance = GetModuleHandle(nullptr);
 
+    //TODO(asoelter): move to WNDCLASSEX
     wndClass_.style = CS_HREDRAW | CS_VREDRAW;
     wndClass_.lpfnWndProc = WndProcSetup;
     wndClass_.cbClsExtra = NULL;
@@ -27,6 +29,7 @@ Window::Window(size_t width, size_t height, const std::string& title)
 
     RegisterClass(&wndClass_);
 
+    //TODO(asoelter): move to CreateWindowEx 
     hwnd_ = CreateWindow(title.c_str(),
         title.c_str(),
         WS_OVERLAPPEDWINDOW,
