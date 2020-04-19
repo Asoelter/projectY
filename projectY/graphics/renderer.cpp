@@ -50,6 +50,3 @@ Renderer::Renderer(const gui::Window& window)
 
 }
 
-void Renderer::bind(const VertexBuffer& buffer)
-{
-}

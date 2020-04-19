@@ -13,7 +13,11 @@ class Renderer
 public:
     Renderer(const gui::Window& window);
 
-    void bind(const VertexBuffer& buffer);
+    template<typename Vertex>
+    void bind(VertexBuffer<Vertex>& buffer)
+    {
+        buffer.bind(device_.Get(), context_.Get());
+    }
 
     //temp functions to rough in the renderer
     Microsoft::WRL::ComPtr<ID3D11Device>           device()    { return device_; }

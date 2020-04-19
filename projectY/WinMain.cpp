@@ -3,6 +3,7 @@
 #include <d3dcompiler.h>
 #include <wrl.h>
 
+#include <array>
 #include <cassert>
 
 #include <graphics/renderer.h>
@@ -50,8 +51,18 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         DirectX::XMFLOAT4{-0.5f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,0.0f,1.0f, 1.0f}
     };
 
+    std::vector pcVertices =
+    {
+        PCVertex{DirectX::XMFLOAT4{ 0.0f, 0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{1.0f,0.0f,0.0f, 1.0f}},
+        PCVertex{DirectX::XMFLOAT4{ 0.5f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,1.0f,0.0f, 1.0f}},
+        PCVertex{DirectX::XMFLOAT4{-0.5f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,0.0f,1.0f, 1.0f}}
+    };
+
+    VertexBuffer vertexBuffer(pcVertices);
+    renderer.bind(vertexBuffer);
+
     // create vertex buffer (1 2d triangle at center of screen)
-    Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
+    /*Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
     D3D11_BUFFER_DESC bd = {};
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bd.Usage = D3D11_USAGE_DEFAULT;
@@ -65,7 +76,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     const UINT stride = sizeof(Vertex);
     const UINT offset = 0u;
-    pContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+    pContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);*/
+
+    //Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer = vertexBuffer.buffer();
+    //assert(pVertexBuffer);
+
 
     ////////////////////////////////
     //Create and bind pixel shader//
@@ -153,14 +168,16 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     const float green = 0.3f;
     const float blue = 0.4f;
 
-    MSG msg;
-    while (true)
+    //MSG msg;
+    while (window.open())
     {
-        while (PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE))
+        /*while (PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE))
         {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
-        }
+        }*/
+
+        window.update();
 
         //clearBuffer
         const float color[] = { red,green,blue,1.0f };

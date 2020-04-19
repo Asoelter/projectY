@@ -8,7 +8,7 @@ if(CMAKE_CONFIGURATION_TYPES STREQUAL "Debug")
 endif(CMAKE_CONFIGURATION_TYPES STREQUAL "Debug")
 
 # Add source to this project's executable.
-add_executable (${PROJECT_NAME} WIN32 WinMain.cpp "graphics/vertex_buffer.cpp" "graphics/renderer.cpp")
+add_executable (${PROJECT_NAME} WIN32 WinMain.cpp "graphics/vertex_buffer.hpp" "graphics/renderer.cpp")
 
 add_subdirectory(gui)
 include_directories(gui)

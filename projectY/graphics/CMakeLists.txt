@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.8)
 
 project("graphics")
 
-add_library(${PROJECT_NAME} vertex_buffer.h vertex_buffer.cpp
+add_library(${PROJECT_NAME} vertex_buffer.h vertex_buffer.hpp
 							renderer.h		renderer.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../)
