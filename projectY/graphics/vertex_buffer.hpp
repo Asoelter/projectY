@@ -18,7 +18,6 @@ void VertexBuffer<Vertex>::bind(ID3D11Device* device, ID3D11DeviceContext* conte
         createBuffer(device);
     }
 
-    assert(buffer_);
     const UINT stride = sizeof(Vertex);
     const UINT offset = 0u;
     context->IASetVertexBuffers(0u, 1u, buffer_.GetAddressOf(), &stride, &offset);
@@ -27,15 +26,17 @@ void VertexBuffer<Vertex>::bind(ID3D11Device* device, ID3D11DeviceContext* conte
 template<typename Vertex>
 void VertexBuffer<Vertex>::createBuffer(ID3D11Device* device)
 {
-    Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
     D3D11_BUFFER_DESC bd = {0};
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(vertices_);
+    bd.CPUAccessFlags = 0u;
+    bd.MiscFlags = 0u;
+    bd.ByteWidth = sizeof(vertices_[0]) * vertices_.size(); //TODO(asoelter): find a safer way to do this?
     bd.StructureByteStride = sizeof(Vertex);
 
     D3D11_SUBRESOURCE_DATA srd = {0};
-    srd.pSysMem = vertices_.data();
+    auto* rawData = vertices_.data();
+    srd.pSysMem = (void*)rawData;
 
     device->CreateBuffer(&bd, &srd, &buffer_);
 }

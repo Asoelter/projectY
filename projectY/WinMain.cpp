@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <d3d11.h>
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
 #include <wrl.h>
@@ -12,8 +13,6 @@
 
 #include <util/uuid.h>
 #include <util/error_printer.h>
-
-#include <d3d11.h>
 
 #define GFX_THROW_INFO(func) func
 #define GFX_THROW_INFO_ONLY(func) func
@@ -61,25 +60,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     VertexBuffer vertexBuffer(pcVertices);
     renderer.bind(vertexBuffer);
 
-    // create vertex buffer (1 2d triangle at center of screen)
-    /*Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
-    D3D11_BUFFER_DESC bd = {};
-    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.CPUAccessFlags = 0u;
-    bd.MiscFlags = 0u;
-    bd.ByteWidth = sizeof(vertices);
-    bd.StructureByteStride = sizeof(Vertex);
-    D3D11_SUBRESOURCE_DATA srd = {};
-    srd.pSysMem = vertices;
-    GFX_THROW_INFO(pDevice->CreateBuffer(&bd, &srd, &pVertexBuffer));
-
-    const UINT stride = sizeof(Vertex);
-    const UINT offset = 0u;
-    pContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);*/
-
-    //Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer = vertexBuffer.buffer();
-    //assert(pVertexBuffer);
+    Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer = vertexBuffer.buffer();
+    assert(pVertexBuffer);
 
 
     ////////////////////////////////
