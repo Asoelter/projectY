@@ -1,7 +1,6 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <d3d11.h>
 #include <wrl.h>
 
 #include <string>

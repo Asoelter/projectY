@@ -7,6 +7,7 @@
 #include <gui/window.h>
 
 #include "color.h"
+#include "pixel_shader.h"
 #include "vertex_buffer.h"
 #include "vertex_shader.h"
 
@@ -20,21 +21,15 @@ class Renderer
 public:
     Renderer(const gui::Window& window);
 
-    template<typename Shader>
-    void bind(Shader& shader);
+    void bindVertexShader(VertexShader& shader);
+    void bindPixelShader(PixelShader& shader);
 
     template<typename Vertex>
-    void bind(VertexBuffer<Vertex>& buffer);
+    void bindBuffer(VertexBuffer<Vertex>& buffer);
 
-    void clear(const Color& color);
+    void beginFrame(const Color& color);
     void draw(Topology topology);
-
-    //temp functions to rough in the renderer
-    Microsoft::WRL::ComPtr<ID3D11Device>           device()    { return device_; }
-    Microsoft::WRL::ComPtr<IDXGISwapChain>         swapchain() { return swapchain_; }
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext>    context()   { return context_; }
-    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> target()    { return target_; }
-    Microsoft::WRL::ComPtr<ID3D11VertexShader>     shader() { return shader_->rawShader(); }
+    void endFrame();
 
 private:
     template<typename Vertex, typename Shader>
@@ -48,15 +43,8 @@ private:
     size_t vertexCount_;
 };
 
-template<typename Shader>
-void Renderer::bind(Shader& shader)
-{
-    shader_ = &shader;
-    shader.bind(device_.Get(), context_.Get());
-}
-
 template<typename Vertex>
-void Renderer::bind(VertexBuffer<Vertex>& buffer)
+void Renderer::bindBuffer(VertexBuffer<Vertex>& buffer)
 {
     if (!shader_)
     {

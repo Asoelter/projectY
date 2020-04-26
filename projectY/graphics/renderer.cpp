@@ -69,7 +69,18 @@ Renderer::Renderer(const gui::Window& window)
     context_->RSSetViewports(1u, &vp);
 }
 
-void Renderer::clear(const Color& color)
+void Renderer::bindVertexShader(VertexShader& shader)
+{
+    shader_ = &shader;
+    shader.bind(device_.Get(), context_.Get());
+}
+
+void Renderer::bindPixelShader(PixelShader& shader)
+{
+    shader.bind(device_.Get(), context_.Get());
+}
+
+void Renderer::beginFrame(const Color& color)
 {
     context_->ClearRenderTargetView(target_.Get(), color.data);
 }
@@ -86,7 +97,11 @@ void Renderer::draw(Topology topology)
     context_->Draw((UINT)vertexCount_, 0u);
 
     //endFrame
-    swapchain_->Present(1u, 0u);
     vertexCount_ = 0;
+}
+
+void Renderer::endFrame()
+{
+    swapchain_->Present(1u, 0u);
 }
 
