@@ -4,7 +4,7 @@
 
 namespace gui
 {
-Window::Window(size_t width, size_t height, const std::string& title)
+Window::Window(UINT width, UINT height, const std::string& title)
     : wndClass_({ 0 })
     , hwnd_(0)
     , width_(width)
@@ -115,12 +115,12 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
     return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-size_t Window::width() const noexcept
+UINT Window::width() const noexcept
 {
     return width_;
 }
 
-size_t Window::height() const noexcept
+UINT Window::height() const noexcept
 {
     return height_;
 }

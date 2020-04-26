@@ -13,7 +13,7 @@ namespace gui
 class Window
 {
 public:
-    Window(size_t width, size_t height, const std::string& title);
+    Window(UINT width, UINT height, const std::string& title);
     ~Window();
 
     //TODO(asoelter): consider a different name like "isProcessingMessages"
@@ -26,10 +26,10 @@ public:
     LRESULT WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept;
 
     [[nodiscard]]
-    size_t width() const noexcept;
+    UINT width() const noexcept;
 
     [[nodiscard]]
-    size_t height() const noexcept;
+    UINT height() const noexcept;
 
     [[nodiscard]]
     const HWND & handle() const noexcept;
@@ -41,8 +41,8 @@ private:
 private:
     WNDCLASS            wndClass_;
     HWND                hwnd_;
-    size_t              width_;
-    size_t              height_;
+    UINT                width_;
+    UINT                height_;
     std::string         title_;
     std::vector<Button> buttons_;
     bool                open_;

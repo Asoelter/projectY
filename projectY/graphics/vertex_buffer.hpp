@@ -1,3 +1,5 @@
+#include "vertex_buffer.h"
+#include "vertex_buffer.h"
 template<typename Vertex>
 VertexBuffer<Vertex>::VertexBuffer(std::vector<Vertex> vertices)
     : vertices_(vertices)
@@ -24,6 +26,34 @@ void VertexBuffer<Vertex>::bind(ID3D11Device* device, ID3D11DeviceContext* conte
 }
 
 template<typename Vertex>
+std::vector<D3D11_INPUT_ELEMENT_DESC> VertexBuffer<Vertex>::layout() const
+{
+    auto rval = std::vector<D3D11_INPUT_ELEMENT_DESC>();
+
+    for (int i = 0; i < VertexInfo<Vertex>::elementCount; ++i)
+    {
+        D3D11_INPUT_ELEMENT_DESC desc;
+        desc.SemanticName = VertexInfo<Vertex>::semanticNames[i];
+        desc.SemanticIndex = 0;
+        desc.Format = static_cast<DXGI_FORMAT>(VertexInfo<Vertex>::bitOrders[i]);
+        desc.InputSlot = 0;
+        desc.AlignedByteOffset = VertexInfo<Vertex>::offsets[i];
+        desc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+        desc.InstanceDataStepRate = 0;
+
+        rval.push_back(desc);
+    }
+
+    return rval;
+}
+
+template<typename Vertex>
+size_t VertexBuffer<Vertex>::size() const
+{
+    return vertices_.size();
+}
+
+template<typename Vertex>
 void VertexBuffer<Vertex>::createBuffer(ID3D11Device* device)
 {
     D3D11_BUFFER_DESC bd = {0};
@@ -31,7 +61,7 @@ void VertexBuffer<Vertex>::createBuffer(ID3D11Device* device)
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.CPUAccessFlags = 0u;
     bd.MiscFlags = 0u;
-    bd.ByteWidth = sizeof(vertices_[0]) * vertices_.size(); //TODO(asoelter): find a safer way to do this?
+    bd.ByteWidth = static_cast<UINT>(sizeof(vertices_[0]) * vertices_.size());
     bd.StructureByteStride = sizeof(Vertex);
 
     D3D11_SUBRESOURCE_DATA srd = {0};

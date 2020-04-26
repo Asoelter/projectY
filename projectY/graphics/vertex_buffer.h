@@ -32,6 +32,12 @@ public:
 
     void bind(ID3D11Device* device, ID3D11DeviceContext* context);
 
+    [[nodiscard]]
+    std::vector<D3D11_INPUT_ELEMENT_DESC> layout() const;
+
+    [[nodiscard]]
+    size_t size() const;
+
     //temp function to rough the vertex buffer in with
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer() { return buffer_; }
 
@@ -62,7 +68,8 @@ struct VertexInfo<PCVertex>
     static constexpr auto elementCount = 2;
     static constexpr VertexBuffer<PCVertex>::BitOrder bitOrders[elementCount] = 
         { VertexBuffer<PCVertex>::BitOrder::X32Y32Z32W32, VertexBuffer<PCVertex>::BitOrder::R32G32B32A32 };
-    static constexpr char* semanticNames[elementCount] = { "Position", "Color" };
+    static constexpr char* const semanticNames[elementCount] = { "Position", "Color" };
+    static constexpr UINT offsets[elementCount] = { 0, 16u };
 };
 
 #include "vertex_buffer.hpp"
