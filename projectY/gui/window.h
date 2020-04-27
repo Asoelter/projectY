@@ -10,10 +10,37 @@
 
 namespace gui
 {
+
+struct WindowRect
+{
+    WindowRect(UINT _x, UINT _y, UINT _w, UINT _h)
+        : x(_x)
+        , y(_y)
+        , width(_w)
+        , height(_h)
+    {
+
+    }
+
+    WindowRect(UINT _w, UINT _h)
+        : x(CW_USEDEFAULT)
+        , y(CW_USEDEFAULT)
+        , width(_w)
+        , height(_h)
+    {
+
+    }
+
+    UINT x;
+    UINT y;
+    UINT width;
+    UINT height;
+};
+
 class Window
 {
 public:
-    Window(UINT width, UINT height, const std::string& title);
+    Window(const WindowRect& rect, const std::string& title, HWND parent = NULL);
     ~Window();
 
     //TODO(asoelter): consider a different name like "isProcessingMessages"
@@ -39,7 +66,11 @@ private:
     static LRESULT CALLBACK forwardMsg(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept;
 
 private:
-    WNDCLASS            wndClass_;
+    WNDCLASSEX createWndClass();
+    HWND createHwnd(const WindowRect& rect, UINT style, const std::string& title, HWND parent);
+
+private:
+    WNDCLASSEX            wndClass_;
     HWND                hwnd_;
     UINT                width_;
     UINT                height_;

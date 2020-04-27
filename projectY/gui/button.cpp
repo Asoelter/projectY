@@ -26,7 +26,7 @@ void Button::attachTo(HWND hwnd)
     const auto hInstance = GetModuleHandle(NULL);
 
     const auto button = CreateWindow("button", ctitle, style, x, y, width,
-        height, hwnd, (HMENU)id_, hInstance, nullptr);
+        height, hwnd, reinterpret_cast<HMENU>(id_), hInstance, nullptr);
 }
 
 size_t Button::id() const noexcept

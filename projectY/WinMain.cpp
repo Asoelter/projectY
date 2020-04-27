@@ -17,9 +17,17 @@
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-    auto window = gui::Window(800u, 600u, "draw window");
+    auto window = gui::Window({ 800u, 600u }, "parent window");
+    auto childWin = gui::Window({200, 150, 400, 300 }, "child window", window.handle());
+    auto description = gui::Button::Descriptor(40, 20, 40, 20, "show");
+    auto button = gui::Button(description);
 
-    auto renderer = Renderer(window);
+    bool show = true;
+    button.pushed.connect([&show]() {show = !show; });
+
+    window.attach(std::move(button));
+
+    auto renderer = Renderer(childWin);
 
     std::vector vertices =
     {
@@ -32,7 +40,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     {
         PCVertex{DirectX::XMFLOAT4{ 0.3f, 0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{1.0f,0.0f,0.0f, 1.0f}},
         PCVertex{DirectX::XMFLOAT4{ 0.8f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,1.0f,0.0f, 1.0f}},
-        PCVertex{DirectX::XMFLOAT4{-0.2f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,0.0f,1.0f, 1.0f}}
+        PCVertex{DirectX::XMFLOAT4{-0.2f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,0.0f,1.0f, 1.0f}},
+        PCVertex{DirectX::XMFLOAT4{ 0.3f, 0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{1.0f,0.0f,0.0f, 1.0f}}
     };
 
     VertexBuffer vertexBuffer(vertices);
@@ -50,10 +59,13 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
         renderer.beginFrame(color);
 
-        renderer.bindBuffer(vertexBuffer);
-        renderer.draw(Topology::TriangleList);
-        renderer.bindBuffer(b2);
-        renderer.draw(Topology::TriangleList);
+        if (show)
+        {
+            renderer.bindBuffer(vertexBuffer);
+            renderer.draw(Topology::TriangleList);
+            renderer.bindBuffer(b2);
+            renderer.draw(Topology::PolyLine);
+        }
 
         renderer.endFrame();
     }

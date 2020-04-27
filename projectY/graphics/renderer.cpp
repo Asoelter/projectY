@@ -2,11 +2,7 @@
 
 D3D11_PRIMITIVE_TOPOLOGY translate(Topology topology)
 {
-    switch (topology)
-    {
-    case Topology::TriangleList: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-    default: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-    }
+    return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology);
 }
 
 Renderer::Renderer(const gui::Window& window)

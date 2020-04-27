@@ -4,43 +4,29 @@
 
 namespace gui
 {
-Window::Window(UINT width, UINT height, const std::string& title)
+Window::Window(const WindowRect& rect, const std::string& title, HWND parent)
     : wndClass_({ 0 })
     , hwnd_(0)
-    , width_(width)
-    , height_(height)
+    , width_(rect.width)
+    , height_(rect.height)
     , title_(title)
     , buttons_()
     , open_(true)
 {
     const auto hInstance = GetModuleHandle(nullptr);
 
-    //TODO(asoelter): move to WNDCLASSEX
-    wndClass_.style = CS_HREDRAW | CS_VREDRAW;
-    wndClass_.lpfnWndProc = WndProcSetup;
-    wndClass_.cbClsExtra = NULL;
-    wndClass_.cbWndExtra = NULL;
-    wndClass_.hInstance = hInstance;
-    wndClass_.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-    wndClass_.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wndClass_.hbrBackground = CreateSolidBrush(RGB(50, 50, 50));
-    wndClass_.lpszMenuName = nullptr;
-    wndClass_.lpszClassName = title.c_str();
+    wndClass_ = createWndClass();
+    RegisterClassEx(&wndClass_);
 
-    RegisterClass(&wndClass_);
+    auto style = WS_OVERLAPPEDWINDOW;
 
-    //TODO(asoelter): move to CreateWindowEx 
-    hwnd_ = CreateWindow(title.c_str(),
-        title.c_str(),
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        static_cast<int>(width_),
-        static_cast<int>(height_),
-        nullptr,
-        nullptr,
-        hInstance,
-        this);
+    if (parent)
+    {
+        style &= 0;
+        style |= WS_CHILDWINDOW;
+    }
+
+    hwnd_ = createHwnd(rect, style, title_, parent);
 
     ShowWindow(hwnd_, SW_SHOW);
     UpdateWindow(hwnd_);
@@ -82,17 +68,6 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
             height_ = HIWORD(lParam);
             return 0;
         }break;
-        /*case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            auto hdc = BeginPaint(hwnd, &ps);
-            auto widthStr = std::to_string(width_);
-            auto heightStr = std::to_string(height_);
-            auto msg = "width: " + widthStr + " height: " + heightStr;
-            TextOut(hdc, 5, 5, msg.c_str(), static_cast<int>(msg.size()));
-            EndPaint(hwnd, &ps);
-            return 0;
-        }break;*/
         case WM_COMMAND:
         {
             for (auto button : buttons_)
@@ -154,46 +129,37 @@ LRESULT CALLBACK Window::forwardMsg(HWND hwnd, UINT message, WPARAM wParam, LPAR
     return window->WndProc(hwnd, message, wParam, lParam);
 }
 
+WNDCLASSEX Window::createWndClass()
+{
+    WNDCLASSEX wndclass = { 0 };
+    wndclass.cbSize = sizeof(wndclass);
+    wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+    wndclass.lpfnWndProc = WndProcSetup;
+    wndclass.cbClsExtra = NULL;
+    wndclass.cbWndExtra = NULL;
+    wndclass.hInstance = GetModuleHandle(nullptr);
+    wndclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+    wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wndclass.hbrBackground = CreateSolidBrush(RGB(50, 50, 50));
+    wndclass.lpszMenuName = nullptr;
+    wndclass.lpszClassName = title_.c_str();
+
+    return wndclass;
 }
-//NOTE(asoelter) we should make the construct use
-//extended win32 functionality like the code 
-//snippet shown below
 
-    /*WNDCLASSEX wc = { 0 };
-    wc.cbSize = sizeof(wc);
-    wc.style = CS_OWNDC;
-    wc.lpfnWndProc = WndProc;
-    wc.cbClsExtra = 0;
-    wc.cbWndExtra = 0;
-    wc.hInstance = hInstance;
-    wc.hIcon = nullptr;
-    wc.hCursor = nullptr;
-    wc.hbrBackground = nullptr;
-    wc.lpszMenuName = nullptr;
-    wc.lpszClassName = "wndClass";
-    wc.hIconSm = nullptr;
-    RegisterClassEx(&wc);
+HWND Window::createHwnd(const WindowRect& rect, UINT style, const std::string& title, HWND parent)
+{
+    return CreateWindowEx(0, title.c_str(),
+        title.c_str(),
+        style,
+        rect.x,
+        rect.y,
+        static_cast<int>(rect.width),
+        static_cast<int>(rect.height),
+        parent,
+        nullptr,
+        GetModuleHandle(nullptr),
+        this);
+}
 
-    RECT wr;
-    wr.left = 100;
-    wr.right = width + wr.left;
-    wr.top = 100;
-    wr.bottom = height + wr.top;
-    if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
-    {
-        assert(false);
-    }
-    // create window & get hWnd
-    HWND hwnd = CreateWindow(
-        "wndClass", "Window",
-        WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-        CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
-        nullptr, nullptr, hInstance, nullptr
-    );
-    // check for error
-    if (!hwnd)
-    {
-        assert(false);
-    }
-    // newly created windows start off as hidden
-    ShowWindow(hwnd, SW_SHOWDEFAULT);*/
+}

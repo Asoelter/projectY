@@ -15,11 +15,12 @@ class Button
 public:
     struct Descriptor
     {
-        Descriptor() : x(0), y(0), width(0), height(0), title() {}
-        int x;
-        int y;
-        int width;
-        int height;
+        Descriptor(UINT _x, UINT _y, UINT _w, UINT _h, const std::string& _t = "") 
+            : x(_x), y(_y), width(_w), height(_h), title(_t) {}
+        UINT x;
+        UINT y;
+        UINT width;
+        UINT height;
         std::string title;
     };
 public:
