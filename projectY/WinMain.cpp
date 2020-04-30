@@ -6,7 +6,9 @@
 
 #include <array>
 #include <cassert>
+#include <cmath>
 
+#include <graphics/constant_buffer.h>
 #include <graphics/renderer.h>
 #include <graphics/vertex_shader.h>
 
@@ -14,6 +16,16 @@
 
 #include <util/uuid.h>
 #include <util/error_printer.h>
+
+struct CBuffer
+{
+    DirectX::XMMATRIX transform;
+};
+
+struct ColorBuffer
+{
+    DirectX::XMFLOAT4 constColor;
+};
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -53,11 +65,21 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     Color color(0.2f, 0.3f, 0.4f);
 
+    float frame = 30.0f;
+
+    CBuffer cb = { DirectX::XMMatrixRotationZ(frame) };
+
+    ConstantBuffer<CBuffer> constBuff(cb);
+    renderer.bindConstantBuffer(constBuff);
+    ConstantBuffer<ColorBuffer> colorBuff({ DirectX::XMFLOAT4(0.2f, 0.3f, 0.2f, 1.0f) });
+    renderer.bindConstantBuffer(colorBuff);
+
     while (window.open())
     {
         window.update();
 
         renderer.beginFrame(color);
+
 
         if (show)
         {
@@ -68,6 +90,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         }
 
         renderer.endFrame();
+        frame += 0.1f;
     }
 }
 

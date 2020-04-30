@@ -99,5 +99,10 @@ void Renderer::draw(Topology topology)
 void Renderer::endFrame()
 {
     swapchain_->Present(1u, 0u);
+    //The type of the constant buffer below does
+    //not matter because the clearBuffers method
+    //works on data that is accessible to all
+    //constant buffers of any kind
+    ConstantBuffer<int>::clearBuffers(); 
 }
 

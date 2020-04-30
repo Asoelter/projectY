@@ -56,6 +56,11 @@ private:
     BufferInfo bufferInfo_[VertexInfo<Vertex>::elementCount];
 };
 
+struct PVertex
+{
+    DirectX::XMFLOAT4 position;
+};
+
 struct PCVertex
 {
     DirectX::XMFLOAT4 position;
@@ -70,6 +75,15 @@ struct VertexInfo<PCVertex>
         { VertexBuffer<PCVertex>::BitOrder::X32Y32Z32W32, VertexBuffer<PCVertex>::BitOrder::R32G32B32A32 };
     static constexpr char* const semanticNames[elementCount] = { "Position", "Color" };
     static constexpr UINT offsets[elementCount] = { 0, 16u };
+};
+
+template<>
+struct VertexInfo<PVertex>
+{
+    static constexpr auto elementCount = 1;
+    static constexpr VertexBuffer<PVertex>::BitOrder bitOrders[elementCount] = { VertexBuffer<PVertex>::BitOrder::X32Y32Z32W32};
+    static constexpr char* const semanticNames[elementCount] = { "Position" };
+    static constexpr UINT offsets[elementCount] = { 0u };
 };
 
 #include "vertex_buffer.hpp"

@@ -7,6 +7,7 @@
 #include <gui/window.h>
 
 #include "color.h"
+#include "constant_buffer.h"
 #include "pixel_shader.h"
 #include "vertex_buffer.h"
 #include "vertex_shader.h"
@@ -28,6 +29,9 @@ public:
 
     template<typename Vertex>
     void bindBuffer(VertexBuffer<Vertex>& buffer);
+
+    template<typename BufferType>
+    void bindConstantBuffer(ConstantBuffer<BufferType>& constBuffer);
 
     void beginFrame(const Color& color);
     void draw(Topology topology);
@@ -58,6 +62,12 @@ void Renderer::bindBuffer(VertexBuffer<Vertex>& buffer)
     vertexCount_ += buffer.size();
 
     registerBufferLayout(buffer, *shader_);
+}
+
+template<typename BufferType>
+void Renderer::bindConstantBuffer(ConstantBuffer<BufferType>& constBuffer)
+{
+    constBuffer.bind(device_.Get(), context_.Get());
 }
 
 template<typename Vertex, typename Shader>
