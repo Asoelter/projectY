@@ -70,7 +70,7 @@ private:
     HWND createHwnd(const WindowRect& rect, UINT style, const std::string& title, HWND parent);
 
 private:
-    WNDCLASSEX            wndClass_;
+    WNDCLASSEX          wndClass_;
     HWND                hwnd_;
     UINT                width_;
     UINT                height_;

@@ -7,6 +7,7 @@
 #include <array>
 #include <cassert>
 
+#include <graphics/pixel_shader.h>
 #include <graphics/renderer.h>
 #include <graphics/vertex_shader.h>
 
@@ -53,6 +54,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     Color color(0.2f, 0.3f, 0.4f);
 
+    POINT mousePos;
     while (window.open())
     {
         window.update();
@@ -68,6 +70,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         }
 
         renderer.endFrame();
+        GetCursorPos(&mousePos);
+        auto msg = "x: " + std::to_string(mousePos.x) +" y: " + std::to_string(mousePos.y) + "\n";
+        OutputDebugString(msg.c_str());
     }
 }
 
