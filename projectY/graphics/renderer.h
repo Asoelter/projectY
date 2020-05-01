@@ -13,6 +13,8 @@
 #include "vertex_buffer.h"
 #include "vertex_shader.h"
 
+class Mesh;
+
 class Renderer
 {
 public:
@@ -29,6 +31,7 @@ public:
 
     void beginFrame(const Color& color);
     void draw(DrawMode mode);
+    void draw(Mesh& mesh);
     void endFrame();
 
 private:

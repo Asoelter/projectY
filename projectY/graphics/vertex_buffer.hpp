@@ -1,5 +1,19 @@
 #include "vertex_buffer.h"
-#include "vertex_buffer.h"
+
+#include <algorithm>
+
+template<typename Vertex>
+VertexBuffer<Vertex>::VertexBuffer()
+    : vertices_()
+    , buffer_(nullptr)
+{
+    for (size_t i = 0; i < VertexInfo<Vertex>::elementCount; ++i)
+    {
+        bufferInfo_[i].bitOrder = VertexInfo<Vertex>::bitOrders[i];
+        bufferInfo_[i].semanticName = VertexInfo<Vertex>::semanticNames[i];
+    }
+}
+
 template<typename Vertex>
 VertexBuffer<Vertex>::VertexBuffer(std::vector<Vertex> vertices)
     : vertices_(vertices)
@@ -23,6 +37,25 @@ void VertexBuffer<Vertex>::bind(ID3D11Device* device, ID3D11DeviceContext* conte
     const UINT stride = sizeof(Vertex);
     const UINT offset = 0u;
     context->IASetVertexBuffers(0u, 1u, buffer_.GetAddressOf(), &stride, &offset);
+}
+
+template<typename Vertex>
+void VertexBuffer<Vertex>::addVertex(const Vertex& vertex)
+{
+    if (buffer_)
+    {
+        //clear the buffer so it will be 
+        //recreated next time it's bound
+        buffer_ = nullptr;
+    }
+
+    vertices_.push_back(vertex);
+}
+
+template<typename Vertex>
+void VertexBuffer<Vertex>::addVertices(const std::vector<Vertex>& vertices)
+{
+    vertices_.insert(vertices_.end(), vertices.begin(), vertices.end());
 }
 
 template<typename Vertex>

@@ -2,10 +2,11 @@
 #include "constant_buffer.h"
 
 template<typename T>
-ConstantBuffer<T>::ConstantBuffer(const T& data)
+ConstantBuffer<T>::ConstantBuffer(const T& data, BufferType type)
     : buffer_(nullptr)
     , description_{0}
     , resourceData_{0}
+    , type_(type)
 {
     description_.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     description_.Usage = D3D11_USAGE_DYNAMIC;
@@ -30,16 +31,20 @@ void ConstantBuffer<T>::bind(ID3D11Device* device, ID3D11DeviceContext* context)
 
     if (!buffer_)
     {
-        device->CreateBuffer(&description_, &resourceData_, buffer_.GetAddressOf());
+        device->CreateBuffer(&description_, &resourceData_, &buffer_);
     }
 
-    context->VSSetConstantBuffers(slotCounter.slotNumber++, 1u, buffer_.GetAddressOf());
-}
-
-template<typename T>
-inline void ConstantBuffer<T>::clearBuffers()
-{
-    slotCounter.slotNumber = 0;
+    switch (type_)
+    {
+    case BufferType::Vertex:
+    {
+        context->VSSetConstantBuffers(0u, 1u, buffer_.GetAddressOf());
+    }break;
+    case BufferType::Pixel:
+    {
+        context->PSSetConstantBuffers(0u, 1u, buffer_.GetAddressOf());
+    }break;
+    }
 }
 
 template<typename T>

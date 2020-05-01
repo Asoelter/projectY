@@ -1,5 +1,7 @@
 #include "renderer.h"
 
+#include "mesh.h"
+
 D3D11_PRIMITIVE_TOPOLOGY translate(DrawMode mode)
 {
     return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(mode);
@@ -96,13 +98,13 @@ void Renderer::draw(DrawMode mode)
     vertexCount_ = 0;
 }
 
+void Renderer::draw(Mesh& mesh)
+{
+    mesh.draw(*this);
+}
+
 void Renderer::endFrame()
 {
     swapchain_->Present(1u, 0u);
-    //The type of the constant buffer below does
-    //not matter because the clearBuffers method
-    //works on data that is accessible to all
-    //constant buffers of any kind
-    ConstantBuffer<int>::clearBuffers(); 
 }
 

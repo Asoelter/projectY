@@ -7,6 +7,12 @@
 
 #include "vertex_buffer.h"
 
+inline std::wstring shaderSource(const std::wstring fileName)
+{
+           //L"../../../../../projectY/res/shaders/solid_pixel.hlsl"
+    return L"../../../../../projectY/res/shaders/" + fileName;
+}
+
 class VertexShader
 {
 public:

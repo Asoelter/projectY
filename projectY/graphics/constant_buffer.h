@@ -5,22 +5,21 @@
 #include <DirectXMath.h>
 #include <wrl.h>
 
-namespace detail
+#include "color.h"
+
+enum class BufferType
 {
-struct SlotCounter
-{
-    inline static UINT slotNumber = 0;
+    Vertex,
+    Pixel
 };
-}
 
 template<typename T>
 class ConstantBuffer
 {
 public:
-    ConstantBuffer(const T& data);
+    ConstantBuffer(const T& data, BufferType type);
 
     void bind(ID3D11Device* device, ID3D11DeviceContext* context);
-    static void clearBuffers();
 
     const void* rawBuffer() const;
     const D3D11_BUFFER_DESC& description() const;
@@ -29,7 +28,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer_;
     D3D11_BUFFER_DESC description_;
     D3D11_SUBRESOURCE_DATA resourceData_;
-    static detail::SlotCounter slotCounter;
+    BufferType type_;
 };
 
 #include "constant_buffer.hpp"
@@ -41,7 +40,8 @@ struct MatrixBuffer
 
 struct ColorBuffer
 {
-    DirectX::XMFLOAT4 constColor;
+    ColorBuffer(const Color& c) : color(c) {}
+    Color color;
 };
 
 

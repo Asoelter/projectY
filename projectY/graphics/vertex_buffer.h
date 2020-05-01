@@ -28,9 +28,12 @@ public:
         X32Y32Z32W32 = R32G32B32A32
     };
 
+    VertexBuffer();
     VertexBuffer(std::vector<Vertex> vertices);
 
     void bind(ID3D11Device* device, ID3D11DeviceContext* context);
+    void addVertex(const Vertex& vertex);
+    void addVertices(const std::vector<Vertex>& vertices);
 
     [[nodiscard]]
     std::vector<D3D11_INPUT_ELEMENT_DESC> layout() const;
@@ -38,8 +41,6 @@ public:
     [[nodiscard]]
     size_t size() const;
 
-    //temp function to rough the vertex buffer in with
-    Microsoft::WRL::ComPtr<ID3D11Buffer> buffer() { return buffer_; }
 
 private:
     void createBuffer(ID3D11Device* device);

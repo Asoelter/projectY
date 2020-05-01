@@ -8,8 +8,9 @@
 #include <cassert>
 #include <cmath>
 
-#include <graphics/pixel_shader.h>
 #include <graphics/constant_buffer.h>
+#include <graphics/mesh.h>
+#include <graphics/pixel_shader.h>
 #include <graphics/renderer.h>
 #include <graphics/vertex_shader.h>
 
@@ -31,36 +32,21 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     std::vector vertices =
     {
-        PCVertex{DirectX::XMFLOAT4{ 0.0f, 0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{1.0f,0.0f,0.0f, 1.0f}},
-        PCVertex{DirectX::XMFLOAT4{ 0.5f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,1.0f,0.0f, 1.0f}},
-        PCVertex{DirectX::XMFLOAT4{-0.5f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,0.0f,1.0f, 1.0f}}
+        PVertex{DirectX::XMFLOAT4{ 0.0f, 0.5f, 1.0f, 1.0f}},
+        PVertex{DirectX::XMFLOAT4{ 0.5f,-0.5f, 1.0f, 1.0f}},
+        PVertex{DirectX::XMFLOAT4{-0.5f,-0.5f, 1.0f, 1.0f}}
     };
-
-    std::vector v2 =
-    {
-        PCVertex{DirectX::XMFLOAT4{ 0.3f, 0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{1.0f,0.0f,0.0f, 1.0f}},
-        PCVertex{DirectX::XMFLOAT4{ 0.8f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,1.0f,0.0f, 1.0f}},
-        PCVertex{DirectX::XMFLOAT4{-0.2f,-0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{0.0f,0.0f,1.0f, 1.0f}},
-        PCVertex{DirectX::XMFLOAT4{ 0.3f, 0.5f, 1.0f, 1.0f}, DirectX::XMFLOAT4{1.0f,0.0f,0.0f, 1.0f}}
-    };
-
-    VertexBuffer vertexBuffer(vertices);
-    VertexBuffer b2(v2);
-    auto vshader = VertexShader(L"../../../../../projectY/res/shaders/vertex.hlsl");
-    auto pshader = PixelShader(L"../../../../../projectY/res/shaders/pixel.hlsl");
+    auto vshader = VertexShader(shaderSource(L"solid_vertex.hlsl"));
+    auto pshader = PixelShader(shaderSource(L"solid_pixel.hlsl"));
     renderer.bindVertexShader(vshader);
     renderer.bindPixelShader(pshader);
 
-    Color color(0.2f, 0.3f, 0.4f);
+    Color color = Color::LightGrey();
 
-    float frame = 30.0f;
+    MatrixBuffer cb = { DirectX::XMMatrixRotationZ(30.0f) };
+    ConstantBuffer<MatrixBuffer> mb(cb, BufferType::Vertex);
 
-    MatrixBuffer cb = { DirectX::XMMatrixRotationZ(frame) };
-
-    ConstantBuffer<MatrixBuffer> constBuff(cb);
-    renderer.bindConstantBuffer(constBuff);
-    ConstantBuffer<ColorBuffer> colorBuff({ DirectX::XMFLOAT4(0.2f, 0.3f, 0.2f, 1.0f) });
-    renderer.bindConstantBuffer(colorBuff);
+    Mesh mesh(vertices);
 
     while (window.open())
     {
@@ -68,13 +54,10 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
         renderer.beginFrame(color);
 
-
         if (show)
         {
-            renderer.bindBuffer(vertexBuffer);
-            renderer.draw(DrawMode::TriangleList);
-            renderer.bindBuffer(b2);
-            renderer.draw(DrawMode::PolyLine);
+            renderer.bindConstantBuffer(mb);
+            renderer.draw(mesh);
         }
 
         renderer.endFrame();

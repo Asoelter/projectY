@@ -6,7 +6,8 @@ add_library(${PROJECT_NAME} vertex_buffer.h   vertex_buffer.hpp
 							renderer.h        renderer.cpp 
 							vertex_shader.h   vertex_shader.cpp 
 							pixel_shader.h    pixel_shader.cpp
-							constant_buffer.h constant_buffer.hpp)
+							constant_buffer.h constant_buffer.hpp 
+							mesh.h            mesh.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../)
 target_include_directories(${PROJECT_NAME} PUBLIC ../gui)

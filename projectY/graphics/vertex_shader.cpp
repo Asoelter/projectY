@@ -25,6 +25,9 @@ VertexShader::VertexShader(const std::wstring& path)
 
 void VertexShader::bind(ID3D11Device* device, ID3D11DeviceContext* context)
 {
-    device->CreateVertexShader(blob_->GetBufferPointer(), blob_->GetBufferSize(), nullptr, &shader_);
+    if (!shader_)
+    {
+        device->CreateVertexShader(blob_->GetBufferPointer(), blob_->GetBufferSize(), nullptr, &shader_);
+    }
     context->VSSetShader(shader_.Get(), nullptr, 0u);
 }
