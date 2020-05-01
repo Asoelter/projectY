@@ -1,8 +1,8 @@
 #include "renderer.h"
 
-D3D11_PRIMITIVE_TOPOLOGY translate(Topology topology)
+D3D11_PRIMITIVE_TOPOLOGY translate(DrawMode mode)
 {
-    return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology);
+    return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(mode);
 }
 
 Renderer::Renderer(const gui::Window& window)
@@ -81,15 +81,15 @@ void Renderer::beginFrame(const Color& color)
     context_->ClearRenderTargetView(target_.Get(), color.data);
 }
 
-void Renderer::draw(Topology topology)
+void Renderer::draw(DrawMode mode)
 {
     // bind render target
     context_->OMSetRenderTargets(1u, target_.GetAddressOf(), nullptr);
 
     // Set primitive topology to triangle list (groups of 3 vertices)
-    D3D11_PRIMITIVE_TOPOLOGY d3dtopology = translate(topology);
+    D3D11_PRIMITIVE_TOPOLOGY topology = translate(mode);
 
-    context_->IASetPrimitiveTopology(d3dtopology);
+    context_->IASetPrimitiveTopology(topology);
     context_->Draw((UINT)vertexCount_, 0u);
 
     //endFrame
@@ -99,5 +99,10 @@ void Renderer::draw(Topology topology)
 void Renderer::endFrame()
 {
     swapchain_->Present(1u, 0u);
+    //The type of the constant buffer below does
+    //not matter because the clearBuffers method
+    //works on data that is accessible to all
+    //constant buffers of any kind
+    ConstantBuffer<int>::clearBuffers(); 
 }
 

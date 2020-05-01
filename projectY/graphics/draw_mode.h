@@ -1,0 +1,11 @@
+#ifndef DRAW_MODE_H
+#define DRAW_MODE_H
+
+enum class DrawMode 
+{
+    TriangleList = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+    LineList = D3D11_PRIMITIVE_TOPOLOGY_LINELIST,
+    PolyLine = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
+};
+
+#endif //DRAW_MODE_H

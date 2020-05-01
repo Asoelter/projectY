@@ -7,16 +7,11 @@
 #include <gui/window.h>
 
 #include "color.h"
+#include "constant_buffer.h"
+#include "draw_mode.h"
 #include "pixel_shader.h"
 #include "vertex_buffer.h"
 #include "vertex_shader.h"
-
-enum class Topology
-{
-    TriangleList = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-    LineList = D3D11_PRIMITIVE_TOPOLOGY_LINELIST,
-    PolyLine = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP
-};
 
 class Renderer
 {
@@ -29,8 +24,11 @@ public:
     template<typename Vertex>
     void bindBuffer(VertexBuffer<Vertex>& buffer);
 
+    template<typename BufferType>
+    void bindConstantBuffer(ConstantBuffer<BufferType>& constBuffer);
+
     void beginFrame(const Color& color);
-    void draw(Topology topology);
+    void draw(DrawMode mode);
     void endFrame();
 
 private:
@@ -58,6 +56,12 @@ void Renderer::bindBuffer(VertexBuffer<Vertex>& buffer)
     vertexCount_ += buffer.size();
 
     registerBufferLayout(buffer, *shader_);
+}
+
+template<typename BufferType>
+void Renderer::bindConstantBuffer(ConstantBuffer<BufferType>& constBuffer)
+{
+    constBuffer.bind(device_.Get(), context_.Get());
 }
 
 template<typename Vertex, typename Shader>

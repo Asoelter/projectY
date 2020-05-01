@@ -6,15 +6,14 @@
 
 #include <array>
 #include <cassert>
+#include <cmath>
 
 #include <graphics/pixel_shader.h>
+#include <graphics/constant_buffer.h>
 #include <graphics/renderer.h>
 #include <graphics/vertex_shader.h>
 
 #include <gui/window.h>
-
-#include <util/uuid.h>
-#include <util/error_printer.h>
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -54,25 +53,31 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     Color color(0.2f, 0.3f, 0.4f);
 
-    POINT mousePos;
+    float frame = 30.0f;
+
+    MatrixBuffer cb = { DirectX::XMMatrixRotationZ(frame) };
+
+    ConstantBuffer<MatrixBuffer> constBuff(cb);
+    renderer.bindConstantBuffer(constBuff);
+    ConstantBuffer<ColorBuffer> colorBuff({ DirectX::XMFLOAT4(0.2f, 0.3f, 0.2f, 1.0f) });
+    renderer.bindConstantBuffer(colorBuff);
+
     while (window.open())
     {
         window.update();
 
         renderer.beginFrame(color);
 
+
         if (show)
         {
             renderer.bindBuffer(vertexBuffer);
-            renderer.draw(Topology::TriangleList);
+            renderer.draw(DrawMode::TriangleList);
             renderer.bindBuffer(b2);
-            renderer.draw(Topology::PolyLine);
+            renderer.draw(DrawMode::PolyLine);
         }
 
         renderer.endFrame();
-        GetCursorPos(&mousePos);
-        auto msg = "x: " + std::to_string(mousePos.x) +" y: " + std::to_string(mousePos.y) + "\n";
-        OutputDebugString(msg.c_str());
     }
 }
 
