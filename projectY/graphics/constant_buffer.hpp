@@ -2,11 +2,15 @@
 #include "constant_buffer.h"
 
 template<typename T>
+SlotCounter<0> ConstantBuffer<T>::vertexSlot{};
+
+template<typename T>
 ConstantBuffer<T>::ConstantBuffer(const T& data, BufferType type)
     : buffer_(nullptr)
     , description_{0}
     , resourceData_{0}
     , type_(type)
+    , value_(data)
 {
     description_.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     description_.Usage = D3D11_USAGE_DYNAMIC;
@@ -14,7 +18,7 @@ ConstantBuffer<T>::ConstantBuffer(const T& data, BufferType type)
     description_.MiscFlags = 0u;
     description_.ByteWidth = sizeof(T);
     description_.StructureByteStride = 0u;
-    resourceData_.pSysMem = &data;
+    resourceData_.pSysMem = &value_;
 }
 
 template<typename T>
@@ -38,13 +42,21 @@ void ConstantBuffer<T>::bind(ID3D11Device* device, ID3D11DeviceContext* context)
     {
     case BufferType::Vertex:
     {
-        context->VSSetConstantBuffers(0u, 1u, buffer_.GetAddressOf());
+        context->VSSetConstantBuffers(vertexSlot.slotNumber++, 1u, buffer_.GetAddressOf());
     }break;
     case BufferType::Pixel:
     {
         context->PSSetConstantBuffers(0u, 1u, buffer_.GetAddressOf());
+        context->PSSetConstantBuffers(pixelSlot.slotNumber++, 1u, buffer_.GetAddressOf());
     }break;
     }
+}
+
+template<typename T>
+inline void ConstantBuffer<T>::clearBuffers()
+{
+    vertexSlot.slotNumber = 0u;
+    pixelSlot.slotNumber = 0u;
 }
 
 template<typename T>

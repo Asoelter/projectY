@@ -7,11 +7,13 @@ D3D11_PRIMITIVE_TOPOLOGY translate(DrawMode mode)
     return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(mode);
 }
 
-Renderer::Renderer(const gui::Window& window)
+Renderer::Renderer(const gui::Window& window, const DirectX::XMMATRIX& projection)
     : device_()
     , swapchain_()
     , context_()
     , target_()
+    , projection_(projection)
+    , projectionBuffer_({ projection_ }, BufferType::Vertex)
     , shader_(nullptr)
     , vertexCount_(0u)
 {
@@ -81,20 +83,18 @@ void Renderer::bindPixelShader(PixelShader& shader)
 void Renderer::beginFrame(const Color& color)
 {
     context_->ClearRenderTargetView(target_.Get(), color.data);
+    bindConstantBuffer(projectionBuffer_);
 }
 
 void Renderer::draw(DrawMode mode)
 {
-    // bind render target
     context_->OMSetRenderTargets(1u, target_.GetAddressOf(), nullptr);
 
-    // Set primitive topology to triangle list (groups of 3 vertices)
     D3D11_PRIMITIVE_TOPOLOGY topology = translate(mode);
 
     context_->IASetPrimitiveTopology(topology);
     context_->Draw((UINT)vertexCount_, 0u);
 
-    //endFrame
     vertexCount_ = 0;
 }
 
@@ -106,5 +106,7 @@ void Renderer::draw(Mesh& mesh)
 void Renderer::endFrame()
 {
     swapchain_->Present(1u, 0u);
+
+    ConstantBuffer<int>::clearBuffers();
 }
 

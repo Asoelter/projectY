@@ -7,6 +7,12 @@
 
 #include "color.h"
 
+template<int>
+struct SlotCounter
+{
+    inline static UINT slotNumber = 0;
+};
+
 enum class BufferType
 {
     Vertex,
@@ -20,6 +26,7 @@ public:
     ConstantBuffer(const T& data, BufferType type);
 
     void bind(ID3D11Device* device, ID3D11DeviceContext* context);
+    static void clearBuffers();
 
     const void* rawBuffer() const;
     const D3D11_BUFFER_DESC& description() const;
@@ -29,12 +36,16 @@ private:
     D3D11_BUFFER_DESC description_;
     D3D11_SUBRESOURCE_DATA resourceData_;
     BufferType type_;
+    T value_;
+    static SlotCounter<0> vertexSlot;
+    static SlotCounter<1> pixelSlot;
 };
 
 #include "constant_buffer.hpp"
 
 struct MatrixBuffer
 {
+    MatrixBuffer(const DirectX::XMMATRIX& t) : transform(t) {}
     DirectX::XMMATRIX transform;
 };
 

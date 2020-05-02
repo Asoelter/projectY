@@ -28,13 +28,14 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     window.attach(std::move(button));
 
-    auto renderer = Renderer(childWin);
+    auto projection = DirectX::XMMatrixTranslation(-4.0f, -4.0f, 0.0f) * DirectX::XMMatrixOrthographicLH(8.0f, 8.0f, 0.0f, 2.0f) ;
+    auto renderer = Renderer(childWin, projection);
 
     std::vector vertices =
     {
-        PVertex{DirectX::XMFLOAT4{ 0.0f, 0.5f, 1.0f, 1.0f}},
-        PVertex{DirectX::XMFLOAT4{ 0.5f,-0.5f, 1.0f, 1.0f}},
-        PVertex{DirectX::XMFLOAT4{-0.5f,-0.5f, 1.0f, 1.0f}}
+        PVertex{DirectX::XMFLOAT4{ 2.0f, 4.0f, 1.0f, 1.0f}},
+        PVertex{DirectX::XMFLOAT4{ 4.0f, 0.0f, 1.0f, 1.0f}},
+        PVertex{DirectX::XMFLOAT4{ 0.0f, 0.0f, 1.0f, 1.0f}}
     };
     auto vshader = VertexShader(shaderSource(L"solid_vertex.hlsl"));
     auto pshader = PixelShader(shaderSource(L"solid_pixel.hlsl"));
@@ -43,7 +44,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     Color color = Color::LightGrey();
 
-    MatrixBuffer cb = { DirectX::XMMatrixRotationZ(30.0f) };
+    //MatrixBuffer cb = { DirectX::XMMatrixRotationZ(30.0f) };
+    MatrixBuffer cb = { DirectX::XMMatrixIdentity() };
     ConstantBuffer<MatrixBuffer> mb(cb, BufferType::Vertex);
 
     Mesh mesh(vertices);

@@ -18,7 +18,7 @@ class Mesh;
 class Renderer
 {
 public:
-    Renderer(const gui::Window& window);
+    Renderer(const gui::Window& window, const DirectX::XMMATRIX& projection = DirectX::XMMatrixIdentity());
 
     void bindVertexShader(VertexShader& shader);
     void bindPixelShader(PixelShader& shader);
@@ -42,8 +42,10 @@ private:
     Microsoft::WRL::ComPtr<IDXGISwapChain>          swapchain_;
     Microsoft::WRL::ComPtr<ID3D11DeviceContext>     context_;
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView>  target_;
-    VertexShader* shader_;
-    size_t vertexCount_;
+    DirectX::XMMATRIX                               projection_;
+    ConstantBuffer<MatrixBuffer>                    projectionBuffer_;
+    VertexShader*                                   shader_;
+    size_t                                          vertexCount_;
 };
 
 template<typename Vertex>
@@ -51,8 +53,8 @@ void Renderer::bindBuffer(VertexBuffer<Vertex>& buffer)
 {
     if (!shader_)
     {
+        MessageBox(NULL, "Shader Error", "Shader must be bound before vertex buffer", 0);
         assert(false && "shader must be bound before vertex buffer");
-        MessageBox(NULL, "Hello", "Hello", 0);
         return;
     }
     buffer.bind(device_.Get(), context_.Get());
