@@ -14,6 +14,7 @@
 #include <graphics/renderer.h>
 #include <graphics/vertex_shader.h>
 
+#include <gui/button.h>
 #include <gui/window.h>
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
@@ -44,10 +45,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     Color color = Color::LightGrey();
 
-    //MatrixBuffer cb = { DirectX::XMMatrixRotationZ(30.0f) };
-    MatrixBuffer cb = { DirectX::XMMatrixIdentity() };
-    ConstantBuffer<MatrixBuffer> mb(cb, BufferType::Vertex);
-
     Mesh mesh(vertices);
 
     while (window.open())
@@ -58,7 +55,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
         if (show)
         {
-            renderer.bindConstantBuffer(mb);
+            mesh.translate(0.01f, 0.01f);
             renderer.draw(mesh);
         }
 

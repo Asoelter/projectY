@@ -1,6 +1,8 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include <DirectXMath.h>
+
 #include <vector>
 
 #include "color.h"
@@ -28,12 +30,16 @@ public:
 
     void draw(Renderer& renderer);
 
+    void translate(float x, float y, float z = 0.0f);
+    void rotate(float angle, const DirectX::XMVECTOR& axis = { 0, 0, 1 });
+
 private:
-    VertexBuffer<PVertex> vertexBuffer_;
-    Color color_;
-    ColorBuffer colorBuffer_;
-    ConstantBuffer<ColorBuffer> constColorBuffer_;
-    DrawMode drawMode_;
+    VertexBuffer<PVertex>           vertexBuffer_;
+    Color                           color_;
+    ConstantBuffer<ColorBuffer>     colorBuffer_;
+    DirectX::XMMATRIX               modelMatrix_;
+    ConstantBuffer<MatrixBuffer>    matrixBuffer_;
+    DrawMode                        drawMode_;
 };
 
 #endif //MESH_H

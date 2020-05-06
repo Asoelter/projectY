@@ -22,6 +22,18 @@ ConstantBuffer<T>::ConstantBuffer(const T& data, BufferType type)
 }
 
 template<typename T>
+ConstantBuffer<T>& ConstantBuffer<T>::operator=(const ConstantBuffer& rhs)
+{
+    buffer_ = nullptr;
+    description_ = rhs.description_;
+    type_ = rhs.type_;
+    value_ = rhs.value_;
+    resourceData_.pSysMem = &value_;
+
+    return *this;
+}
+
+template<typename T>
 void ConstantBuffer<T>::bind(ID3D11Device* device, ID3D11DeviceContext* context)
 {
     if (!device)
@@ -46,7 +58,6 @@ void ConstantBuffer<T>::bind(ID3D11Device* device, ID3D11DeviceContext* context)
     }break;
     case BufferType::Pixel:
     {
-        context->PSSetConstantBuffers(0u, 1u, buffer_.GetAddressOf());
         context->PSSetConstantBuffers(pixelSlot.slotNumber++, 1u, buffer_.GetAddressOf());
     }break;
     }

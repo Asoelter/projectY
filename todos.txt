@@ -1,7 +1,5 @@
 *Primary Goals
--move to a global coordinate scheme
 -create meshes
-	-move to vertices with per vertex positions and per attribute colors (need uniform shader)
 	-create mesh creator(s)
 		-collects mouse clicks as inputs and, once the create session is over, returns a mesh with a vertex buffer containing
 		 the geometry of the object

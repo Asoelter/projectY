@@ -22,7 +22,7 @@ void Button::attachTo(HWND hwnd)
 {
     const auto& [x, y, width, height, title] = descriptor_;
     const auto ctitle = title.c_str();
-    const auto style = WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON;
+    const auto style = WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON | BS_FLAT;
     const auto hInstance = GetModuleHandle(NULL);
 
     const auto button = CreateWindow("button", ctitle, style, x, y, width,
