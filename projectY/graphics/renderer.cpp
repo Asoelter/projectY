@@ -88,7 +88,7 @@ void Renderer::bindCamera(Camera& camera)
 void Renderer::beginFrame(const Color& color)
 {
     context_->ClearRenderTargetView(target_.Get(), color.data);
-    bindConstantBuffer(projectionBuffer_);
+    //bindConstantBuffer(projectionBuffer_);
 }
 
 void Renderer::draw(DrawMode mode)

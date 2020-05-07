@@ -45,7 +45,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     auto projection = DirectX::XMMatrixLookAtLH(eye, center, up);
     projection *= view;
     auto renderer = Renderer(childWin, projection);
-    auto camera = firstQuadOrthoCamera(8.0f, 8.0f);
+    auto camera = firstQuadOrthoCamera(8.0f, 8.0f, 2.0f);
 
     std::vector vertices =
     {
@@ -67,10 +67,12 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         window.update();
 
         renderer.beginFrame(color);
+        renderer.bindCamera(camera);
 
         if (show)
         {
-            mesh.translate(0.01f, 0.01f);
+            //mesh.translate(0.01f, 0.01f);
+            camera.pan({ 0.1f, 0.1f, 0.0f });
             renderer.draw(mesh);
         }
 

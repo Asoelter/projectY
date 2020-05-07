@@ -5,6 +5,8 @@
 
 #include <vector>
 
+#include <math/vec3.h>
+
 #include "color.h"
 #include "constant_buffer.h"
 #include "draw_mode.h"
@@ -31,7 +33,7 @@ public:
     void draw(Renderer& renderer);
 
     void translate(float x, float y, float z = 0.0f);
-    void rotate(float angle, const DirectX::XMVECTOR& axis = { 0, 0, 1 });
+    void rotate(float angle, const math::vec3<float>& axis = { 0, 0, 1 });
 
 private:
     VertexBuffer<PVertex>           vertexBuffer_;

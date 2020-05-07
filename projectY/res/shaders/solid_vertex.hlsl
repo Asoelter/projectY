@@ -11,5 +11,5 @@ cbuffer PerObjectInfo : register(b1)
 
 float4 main(float4 position : Position) : SV_Position
 {
-    return mul(mul(position, projection), transform);
+    return mul(mul(mul(position, view), projection), transform);
 }

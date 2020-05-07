@@ -32,14 +32,14 @@ struct vec3
         return vec3(x - rhs.x, y - rhs.y, z - rhs.z);
     }
 
-    constexpr void operator+=(const vec3& rhs) const noexcept
+    constexpr void operator+=(const vec3& rhs) noexcept
     {
         x += rhs.x;
         y += rhs.y;
         z += rhs.z;
     }
 
-    constexpr void operator-=(const vec3& rhs) const noexcept
+    constexpr void operator-=(const vec3& rhs) noexcept
     {
         x -= rhs.x;
         y -= rhs.y;

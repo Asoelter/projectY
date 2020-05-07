@@ -49,12 +49,15 @@ private:
         DirectX::XMMATRIX view;
     };
 
-    DirectX::XMMATRIX projection_;
-    DirectX::XMMATRIX view_;
+    math::vec3<float>                eye_;
+    math::vec3<float>                center_;
+    math::vec3<float>                up_;
+    DirectX::XMMATRIX                projection_;
+    DirectX::XMMATRIX                view_;
     ConstantBuffer<CameraDataBuffer> constBuffer_;
 };
 
-Camera firstQuadOrthoCamera(float width, float height);
+Camera firstQuadOrthoCamera(float width, float height, float depth);
 Camera fourQuadOrthoCamera(float width, float height);
 
 #endif //CAMERA_H

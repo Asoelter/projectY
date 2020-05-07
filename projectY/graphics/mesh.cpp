@@ -58,9 +58,9 @@ void Mesh::translate(float x, float y, float z)
     matrixBuffer_ = ConstantBuffer<MatrixBuffer>(modelMatrix_, BufferType::Vertex);
 }
 
-void Mesh::rotate(float angle, const DirectX::XMVECTOR& axis)
+void Mesh::rotate(float angle, const math::vec3<float>& axis)
 {
-    const auto rotation = DirectX::XMMatrixRotationAxis(axis, angle);
+    const auto rotation = DirectX::XMMatrixRotationAxis(axis.toXMVector(), angle);
     modelMatrix_ *= rotation;
     matrixBuffer_ = ConstantBuffer<MatrixBuffer>(modelMatrix_, BufferType::Vertex);
 }
