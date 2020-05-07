@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cmath>
 
+#include <graphics/camera.h>
 #include <graphics/constant_buffer.h>
 #include <graphics/mesh.h>
 #include <graphics/pixel_shader.h>
@@ -17,7 +18,7 @@
 #include <gui/button.h>
 #include <gui/window.h>
 
-#include <math\vec3.h>
+#include <math/vec3.h>
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -31,8 +32,20 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     window.attach(std::move(button));
 
-    auto projection = DirectX::XMMatrixTranslation(-4.0f, -4.0f, 0.0f) * DirectX::XMMatrixOrthographicLH(8.0f, 8.0f, 0.0f, 2.0f) ;
+    /*auto projection = DirectX::XMMatrixTranslation(-4.0f, -4.0f, 0.0f) * DirectX::XMMatrixOrthographicLH(8.0f, 8.0f, 0.0f, 2.0f) ;
+    const auto eye    = DirectX::XMVectorSet(0.0f, 0.0f, 3.0f, 1.0f);
+    const auto center = DirectX::XMVectorSet(4.0f, 4.0f, 0.0f, 1.0f);
+    const auto up     = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+    projection = DirectX::XMMatrixLookAtLH(eye, center, up);*/
+
+    auto view = DirectX::XMMatrixTranslation(-4.0f, -4.0f, 0.0f) * DirectX::XMMatrixOrthographicLH(8.0f, 8.0f, 0.0f, 2.0f) ;
+    const auto eye    = DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
+    const auto center = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+    const auto up     = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+    auto projection = DirectX::XMMatrixLookAtLH(eye, center, up);
+    projection *= view;
     auto renderer = Renderer(childWin, projection);
+    auto camera = firstQuadOrthoCamera(8.0f, 8.0f);
 
     std::vector vertices =
     {

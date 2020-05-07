@@ -80,6 +80,11 @@ void Renderer::bindPixelShader(PixelShader& shader)
     shader.bind(device_.Get(), context_.Get());
 }
 
+void Renderer::bindCamera(Camera& camera)
+{
+    camera.bind(device_.Get(), context_.Get());
+}
+
 void Renderer::beginFrame(const Color& color)
 {
     context_->ClearRenderTargetView(target_.Get(), color.data);

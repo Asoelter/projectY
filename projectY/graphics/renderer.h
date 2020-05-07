@@ -6,6 +6,7 @@
 
 #include <gui/window.h>
 
+#include "camera.h"
 #include "color.h"
 #include "constant_buffer.h"
 #include "draw_mode.h"
@@ -22,6 +23,7 @@ public:
 
     void bindVertexShader(VertexShader& shader);
     void bindPixelShader(PixelShader& shader);
+    void bindCamera(Camera& camera);
 
     template<typename Vertex>
     void bindBuffer(VertexBuffer<Vertex>& buffer);

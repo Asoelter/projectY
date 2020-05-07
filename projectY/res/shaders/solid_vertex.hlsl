@@ -1,6 +1,7 @@
 cbuffer PerDrawCallInfo : register(b0)
 {
     row_major matrix projection;
+    row_major matrix view;
 };
 
 cbuffer PerObjectInfo : register(b1)
