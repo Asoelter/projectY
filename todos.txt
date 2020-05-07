@@ -1,4 +1,7 @@
 *Primary Goals
+-create camera
+-refactor window class
+	-apply CRTP to create a main window and child window class
 -create meshes
 	-create mesh creator(s)
 		-collects mouse clicks as inputs and, once the create session is over, returns a mesh with a vertex buffer containing
