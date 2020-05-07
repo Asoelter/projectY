@@ -30,5 +30,10 @@ include_directories(util)
 target_link_libraries(${PROJECT_NAME} util)
 target_include_directories(${PROJECT_NAME} PUBLIC util)
 
+add_subdirectory(math)
+include_directories(math)
+target_link_libraries(${PROJECT_NAME} math)
+target_include_directories(${PROJECT_NAME} PUBLIC math)
+
 target_link_libraries(${PROJECT_NAME} d3d11.lib)
 target_link_libraries(${PROJECT_NAME} D3DCompiler.lib)

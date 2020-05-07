@@ -17,6 +17,8 @@
 #include <gui/button.h>
 #include <gui/window.h>
 
+#include <math\vec3.h>
+
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
     auto window = gui::Window({ 800u, 600u }, "parent window");
