@@ -19,7 +19,7 @@ class Mesh;
 class Renderer
 {
 public:
-    Renderer(const gui::Window& window, const DirectX::XMMATRIX& projection = DirectX::XMMatrixIdentity());
+    Renderer(const gui::Window& window);
 
     void bindVertexShader(VertexShader& shader);
     void bindPixelShader(PixelShader& shader);
@@ -44,8 +44,6 @@ private:
     Microsoft::WRL::ComPtr<IDXGISwapChain>          swapchain_;
     Microsoft::WRL::ComPtr<ID3D11DeviceContext>     context_;
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView>  target_;
-    DirectX::XMMATRIX                               projection_;
-    ConstantBuffer<MatrixBuffer>                    projectionBuffer_;
     VertexShader*                                   shader_;
     size_t                                          vertexCount_;
 };

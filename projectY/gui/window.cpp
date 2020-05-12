@@ -34,7 +34,10 @@ Window::Window(const WindowRect& rect, const std::string& title, HWND parent)
 
 Window::~Window()
 {
-    DestroyWindow(hwnd_);
+    if (hwnd_)
+    {
+        DestroyWindow(hwnd_);
+    }
 }
 
 [[nodiscard]]
@@ -60,6 +63,7 @@ void Window::attach(Button&& button) noexcept
 
 LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept
 {
+    keyboard_.keyPressed.emit();
     switch (message)
     {
         case WM_SIZE:
@@ -84,7 +88,10 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
         {
             open_ = false;
         }break;
-
+        case WM_KEYDOWN:
+        {
+            VK_BACK;
+        }break;
     }
 
     return DefWindowProc(hwnd, message, wParam, lParam);

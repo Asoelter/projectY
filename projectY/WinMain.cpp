@@ -16,6 +16,7 @@
 #include <graphics/vertex_shader.h>
 
 #include <gui/button.h>
+#include <gui/keyboard.h>
 #include <gui/window.h>
 
 #include <math/vec3.h>
@@ -28,23 +29,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     auto button = gui::Button(description);
 
     bool show = true;
-    button.pushed.connect([&show]() {show = !show; });
+    connect(button.pushed, Slot<>([&show]() {show = !show; }));
 
     window.attach(std::move(button));
 
-    /*auto projection = DirectX::XMMatrixTranslation(-4.0f, -4.0f, 0.0f) * DirectX::XMMatrixOrthographicLH(8.0f, 8.0f, 0.0f, 2.0f) ;
-    const auto eye    = DirectX::XMVectorSet(0.0f, 0.0f, 3.0f, 1.0f);
-    const auto center = DirectX::XMVectorSet(4.0f, 4.0f, 0.0f, 1.0f);
-    const auto up     = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
-    projection = DirectX::XMMatrixLookAtLH(eye, center, up);*/
-
-    auto view = DirectX::XMMatrixTranslation(-4.0f, -4.0f, 0.0f) * DirectX::XMMatrixOrthographicLH(8.0f, 8.0f, 0.0f, 2.0f) ;
-    const auto eye    = DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f);
-    const auto center = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-    const auto up     = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
-    auto projection = DirectX::XMMatrixLookAtLH(eye, center, up);
-    projection *= view;
-    auto renderer = Renderer(childWin, projection);
+    auto renderer = Renderer(childWin);
     auto camera = firstQuadOrthoCamera(8.0f, 8.0f, 2.0f);
 
     std::vector vertices =
@@ -62,6 +51,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     Mesh mesh(vertices);
 
+
+    float frame = 0.0f;
     while (window.open())
     {
         window.update();
@@ -71,11 +62,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
         if (show)
         {
-            //mesh.translate(0.01f, 0.01f);
-            camera.pan({ 0.1f, 0.1f, 0.0f });
+            camera.move({ std::cos(frame), 0.0f, std::sin(frame) });
             renderer.draw(mesh);
         }
 
+        frame += 0.01f;
         renderer.endFrame();
     }
 }

@@ -39,6 +39,7 @@ public:
 
     void bind(ID3D11Device* device, ID3D11DeviceContext* context);
 
+    void move(const math::vec3<float>& direction);
     void pan(const math::vec3<float>& direction);
     void zoom(float amount);
 

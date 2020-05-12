@@ -1,8 +1,5 @@
 #include <algorithm>
 
-namespace gui
-{
-
 template<typename ...Args>
 void Signal<Args...>::connect(const std::function<void(Args...)>& func)
 {
@@ -30,4 +27,3 @@ void Signal<Args...>::emit(Args... args)
     }
 }
 
-}

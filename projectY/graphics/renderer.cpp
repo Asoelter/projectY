@@ -7,13 +7,11 @@ D3D11_PRIMITIVE_TOPOLOGY translate(DrawMode mode)
     return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(mode);
 }
 
-Renderer::Renderer(const gui::Window& window, const DirectX::XMMATRIX& projection)
+Renderer::Renderer(const gui::Window& window)
     : device_()
     , swapchain_()
     , context_()
     , target_()
-    , projection_(projection)
-    , projectionBuffer_({ projection_ }, BufferType::Vertex)
     , shader_(nullptr)
     , vertexCount_(0u)
 {
@@ -88,7 +86,6 @@ void Renderer::bindCamera(Camera& camera)
 void Renderer::beginFrame(const Color& color)
 {
     context_->ClearRenderTargetView(target_.Get(), color.data);
-    //bindConstantBuffer(projectionBuffer_);
 }
 
 void Renderer::draw(DrawMode mode)

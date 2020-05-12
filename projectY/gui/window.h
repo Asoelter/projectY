@@ -4,9 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "button.h"
+#include <containers/signal.h>
 
 #include <util/ywin.h>
+
+#include "button.h"
+#include "keyboard.h"
 
 namespace gui
 {
@@ -61,6 +64,9 @@ public:
     [[nodiscard]]
     const HWND & handle() const noexcept;
 
+public: //signals
+    Signal<> keyPress;
+
 private:
     static LRESULT CALLBACK WndProcSetup(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept;
     static LRESULT CALLBACK forwardMsg(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept;
@@ -68,6 +74,9 @@ private:
 private:
     WNDCLASSEX createWndClass();
     HWND createHwnd(const WindowRect& rect, UINT style, const std::string& title, HWND parent);
+
+private:
+    static Keyboard keyboard_;
 
 private:
     WNDCLASSEX          wndClass_;

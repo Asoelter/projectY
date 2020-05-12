@@ -6,9 +6,6 @@
 
 #include "slot.h"
 
-namespace gui
-{
-
 template<typename ...Args>
 class Signal
 {
@@ -22,10 +19,14 @@ public:
     void emit(Args... args);
 
 private:
-    //std::vector<std::function<void(Args...)>> functions_;
     std::vector<Slot<Args...>> functions_;
 };
 
+//Utility function for similarities with qt
+template<typename ...Args>
+void connect(Signal<Args...>& signal, Slot<Args...> slot)
+{
+    signal.connect(slot);
 }
 
 #include "signal.hpp"

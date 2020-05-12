@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "camera.h"
 
 namespace
 {
@@ -41,6 +42,14 @@ Camera::Camera(const WorldDescriptor& world, const ViewDescriptor& view)
 void Camera::bind(ID3D11Device* device, ID3D11DeviceContext* context)
 {
     constBuffer_.bind(device, context);
+}
+
+void Camera::move(const math::vec3<float>& direction)
+{
+    eye_ += direction;
+    ViewDescriptor view(eye_, center_, up_);
+    view_ = makeView(view);
+    constBuffer_ = ConstantBuffer<CameraDataBuffer>({ projection_, view_ }, BufferType::Vertex);
 }
 
 void Camera::pan(const math::vec3<float>& direction)
