@@ -22,11 +22,17 @@ private:
     std::vector<Slot<Args...>> functions_;
 };
 
-//Utility function for similarities with qt
+//Utility functions for similarities with qt
 template<typename ...Args>
 void connect(Signal<Args...>& signal, Slot<Args...> slot)
 {
     signal.connect(slot);
+}
+
+template<typename ...Args>
+void emit(Signal<Args...>& signal, Args... args)
+{
+    signal.emit(args...);
 }
 
 #include "signal.hpp"

@@ -1,5 +1,7 @@
 #include "window.h"
-#include "window.h"
+
+#include "keyboard.h"
+#include "mouse.h"
 
 
 namespace gui
@@ -80,7 +82,6 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
                     button.pushed.emit();
                 }
             }
-
             return 0;
         }break;
         case WM_CLOSE:
@@ -91,6 +92,34 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
         case WM_KEYDOWN:
         {
             Keyboard::emitKey(static_cast<size_t>(wParam));
+            return 0;
+        }break;
+        case WM_MOUSEMOVE:
+        {
+            const auto x = LOWORD(lParam);
+            const auto y = HIWORD(lParam);
+            emit(Mouse::move, x, y);
+            return 0;
+        };
+        case WM_LBUTTONDOWN:
+        {
+            const auto x = LOWORD(lParam);
+            const auto y = HIWORD(lParam);
+            emit(Mouse::leftButtonClicked, x, y);
+            return 0;
+        }break;
+        case WM_RBUTTONDOWN:
+        {
+            const auto x = LOWORD(lParam);
+            const auto y = HIWORD(lParam);
+            emit(Mouse::rightButtonClicked, x, y);
+            return 0;
+        }break;
+        case WM_LBUTTONDBLCLK:
+        {
+            const auto x = LOWORD(lParam);
+            const auto y = HIWORD(lParam);
+            emit(Mouse::leftButtonDoubleClicked, x, y);
             return 0;
         }break;
     }

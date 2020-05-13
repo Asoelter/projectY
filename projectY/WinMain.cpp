@@ -16,6 +16,7 @@
 #include <graphics/vertex_shader.h>
 
 #include <gui/button.h>
+#include <gui/mouse.h>
 #include <gui/keyboard.h>
 #include <gui/window.h>
 

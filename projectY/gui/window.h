@@ -9,7 +9,6 @@
 #include <util/ywin.h>
 
 #include "button.h"
-#include "keyboard.h"
 
 namespace gui
 {
@@ -74,9 +73,6 @@ private:
 private:
     WNDCLASSEX createWndClass();
     HWND createHwnd(const WindowRect& rect, UINT style, const std::string& title, HWND parent);
-
-private:
-    static Keyboard keyboard_;
 
 private:
     WNDCLASSEX          wndClass_;

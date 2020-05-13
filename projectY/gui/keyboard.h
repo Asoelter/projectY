@@ -14,6 +14,9 @@ class Window;
 class Keyboard
 {
 public:
+    using SignalType = Signal<>;
+    using SlotType = Slot<>;
+
     static Signal<> backKeyPressed;
     static Signal<> tabKeyPressed;
     static Signal<> enterKeyPressed;

@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 3.8)
 project("gui")
 
 add_library(${PROJECT_NAME} window.h window.cpp
-				            button.h button.cpp "keyboard.cpp")
+				            button.h button.cpp "keyboard.cpp" "mouse.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../)
 
