@@ -63,7 +63,6 @@ void Window::attach(Button&& button) noexcept
 
 LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept
 {
-    keyboard_.keyPressed.emit();
     switch (message)
     {
         case WM_SIZE:
@@ -87,10 +86,12 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
         case WM_CLOSE:
         {
             open_ = false;
+            return 0;
         }break;
         case WM_KEYDOWN:
         {
-            VK_BACK;
+            Keyboard::emitKey(static_cast<size_t>(wParam));
+            return 0;
         }break;
     }
 

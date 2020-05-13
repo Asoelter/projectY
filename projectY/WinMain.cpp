@@ -52,7 +52,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     Mesh mesh(vertices);
 
 
-    float frame = 0.0f;
+    connect(gui::Keyboard::upArrowKeyPressed,    Slot<>([&mesh]() {mesh.translate(0.0f, 0.01f); }));
+    connect(gui::Keyboard::rightArrowKeyPressed, Slot<>([&mesh]() {mesh.translate(0.01f, 0.0f); }));
+    connect(gui::Keyboard::downArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(0.0f, -0.01f); }));
+    connect(gui::Keyboard::leftArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(-0.01f, 0.0f); }));
+
     while (window.open())
     {
         window.update();
@@ -62,11 +66,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
         if (show)
         {
-            camera.move({ std::cos(frame), 0.0f, std::sin(frame) });
             renderer.draw(mesh);
         }
 
-        frame += 0.01f;
         renderer.endFrame();
     }
 }
