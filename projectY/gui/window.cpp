@@ -3,6 +3,8 @@
 #include "keyboard.h"
 #include "mouse.h"
 
+#include <windowsx.h>
+
 
 namespace gui
 {
@@ -20,7 +22,7 @@ Window::Window(const WindowRect& rect, const std::string& title, HWND parent)
     wndClass_ = createWndClass();
     RegisterClassEx(&wndClass_);
 
-    auto style = WS_OVERLAPPEDWINDOW;
+    auto style = WS_OVERLAPPEDWINDOW | CS_DBLCLKS;
 
     if (parent)
     {
@@ -96,15 +98,15 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
         }break;
         case WM_MOUSEMOVE:
         {
-            const auto x = LOWORD(lParam);
-            const auto y = HIWORD(lParam);
+            const auto x = GET_X_LPARAM(lParam);
+            const auto y = GET_Y_LPARAM(lParam);
             emit(Mouse::move, x, y);
             return 0;
         };
         case WM_LBUTTONDOWN:
         {
-            const auto x = LOWORD(lParam);
-            const auto y = HIWORD(lParam);
+            const auto x = GET_X_LPARAM(lParam);
+            const auto y = GET_Y_LPARAM(lParam);
             emit(Mouse::leftButtonClicked, x, y);
             return 0;
         }break;
@@ -117,8 +119,8 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
         }break;
         case WM_LBUTTONDBLCLK:
         {
-            const auto x = LOWORD(lParam);
-            const auto y = HIWORD(lParam);
+            const auto x = GET_X_LPARAM(lParam);
+            const auto y = GET_Y_LPARAM(lParam);
             emit(Mouse::leftButtonDoubleClicked, x, y);
             return 0;
         }break;

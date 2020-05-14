@@ -11,8 +11,8 @@ class Window;
 class Mouse
 {
 public:
-    using SignalType = Signal<unsigned short, unsigned short>;
-    using SlotType = Slot<unsigned short, unsigned short>;
+    using SignalType = Signal<int, int>;
+    using SlotType = Slot<int, int>;
 
     static SignalType move;
     static SignalType leftButtonClicked;

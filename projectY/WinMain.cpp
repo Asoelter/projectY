@@ -57,6 +57,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     connect(gui::Keyboard::rightArrowKeyPressed, Slot<>([&mesh]() {mesh.translate(0.01f, 0.0f); }));
     connect(gui::Keyboard::downArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(0.0f, -0.01f); }));
     connect(gui::Keyboard::leftArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(-0.01f, 0.0f); }));
+    //connect(gui::Mouse::leftButtonDoubleClicked, gui::Mouse::SlotType([](int, int) {MessageBox(NULL, "dblclick", "dblclick", NULL); }));
 
     while (window.open())
     {
