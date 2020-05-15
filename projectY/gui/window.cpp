@@ -28,6 +28,7 @@ Window::Window(const WindowRect& rect, const std::string& title, HWND parent)
     {
         style &= 0;
         style |= WS_CHILDWINDOW;
+        style |= CS_DBLCLKS;
     }
 
     hwnd_ = createHwnd(rect, style, title_, parent);
@@ -112,8 +113,8 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
         }break;
         case WM_RBUTTONDOWN:
         {
-            const auto x = LOWORD(lParam);
-            const auto y = HIWORD(lParam);
+            const auto x = GET_X_LPARAM(lParam);
+            const auto y = GET_Y_LPARAM(lParam);
             emit(Mouse::rightButtonClicked, x, y);
             return 0;
         }break;

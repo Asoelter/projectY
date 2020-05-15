@@ -33,10 +33,9 @@ void connect(Signal<Args...>& signal, Slot<Args...> slot)
 template<typename ...Args, typename ...Args2>
 void emit(Signal<Args...>& signal, Args2... args)
 {
-    static_assert(std::is_same_v< 
-        TypeList<Args...>, 
-        TypeList<std::remove_const<Args2>...>>, 
-        "Incorrect arguments passed to signal");
+    static_assert(AreEquatable<TypeList<Args...>, TypeList<Args2...>>, 
+        "Incompatible arguments passed to signal");
+
     signal.emit(args...);
 }
 
