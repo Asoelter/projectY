@@ -9,6 +9,7 @@
 #include <util/ywin.h>
 
 #include "button.h"
+#include "menu.h"
 
 namespace gui
 {
@@ -42,7 +43,7 @@ struct WindowRect
 class Window
 {
 public:
-    Window(const WindowRect& rect, const std::string& title, HWND parent = NULL);
+    Window(const WindowRect& rect, const std::string& title, const Menu& menu = Menu::Null, HWND parent = NULL);
     ~Window();
 
     //TODO(asoelter): consider a different name like "isProcessingMessages"
@@ -72,7 +73,7 @@ private:
 
 private:
     WNDCLASSEX createWndClass();
-    HWND createHwnd(const WindowRect& rect, UINT style, const std::string& title, HWND parent);
+    HWND createHwnd(const WindowRect& rect, UINT style, const std::string& title, const Menu& menu, HWND parent);
 
 private:
     WNDCLASSEX          wndClass_;
@@ -81,6 +82,7 @@ private:
     UINT                height_;
     std::string         title_;
     std::vector<Button> buttons_;
+    Menu                menu_;
     bool                open_;
 };
 }

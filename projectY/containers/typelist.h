@@ -2,6 +2,7 @@
 #define CONTAINER_TRAITS_H
 
 #include <type_traits>
+#include <util/type_traits.h>
 
 template<typename ...Args>
 struct TypeList
@@ -20,6 +21,9 @@ struct IsListT : std::false_type {};
 template<typename ...Args>
 struct IsListT<TypeList<Args...>> : std::true_type {};
 
+template<typename LhsList, typename RhsList>
+struct AreEquatableT;
+
 template<typename Head, typename ...Tail>
 struct TailT<TypeList<Head, Tail...>>
 {
@@ -32,13 +36,16 @@ struct HeadT<TypeList<Head, Tail...>>
     using type = Head;
 };
 
-template<typename LhsList, typename RhsList>
-struct AreEquatableT;
+template<>
+struct AreEquatableT<TypeList<>, TypeList<>>
+{
+    static constexpr bool value = true;
+};
 
 template<typename T, typename U>
 struct AreEquatableT<TypeList<T>, TypeList<U>>
 {
-    static constexpr bool value = std::is_convertible_v<T, U>;
+    static constexpr bool value = std::is_convertible_v<RemoveCVRef<T>, RemoveCVRef<U>>;
 };
 
 template<typename LhsList, typename RhsList>
@@ -46,8 +53,8 @@ struct AreEquatableT
 {
     static_assert(IsListT<LhsList>::value && IsListT<RhsList>::value);
     static constexpr bool value = std::is_convertible_v<
-        std::remove_cv_t<std::remove_reference_t<Head<RhsList>>>, 
-        std::remove_cv_t<std::remove_reference_t<Head<LhsList>>>
+        RemoveCVRef<Head<RhsList>>, 
+        RemoveCVRef<Head<LhsList>>
     > && AreEquatableT<Tail<LhsList>, Tail<RhsList>>::value;
 };
 

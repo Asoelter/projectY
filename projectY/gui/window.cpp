@@ -8,13 +8,14 @@
 
 namespace gui
 {
-Window::Window(const WindowRect& rect, const std::string& title, HWND parent)
+Window::Window(const WindowRect& rect, const std::string& title, const Menu& menu, HWND parent)
     : wndClass_({ 0 })
     , hwnd_(0)
     , width_(rect.width)
     , height_(rect.height)
     , title_(title)
     , buttons_()
+    , menu_(menu)
     , open_(true)
 {
     const auto hInstance = GetModuleHandle(nullptr);
@@ -31,7 +32,7 @@ Window::Window(const WindowRect& rect, const std::string& title, HWND parent)
         style |= CS_DBLCLKS;
     }
 
-    hwnd_ = createHwnd(rect, style, title_, parent);
+    hwnd_ = createHwnd(rect, style, title_, menu_, parent);
 
     ShowWindow(hwnd_, SW_SHOW);
     UpdateWindow(hwnd_);
@@ -83,8 +84,17 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
                 if (LOWORD(wParam) == button.id())
                 {
                     button.pushed.emit();
+                    return 0;
                 }
             }
+
+            auto menuItem = menu_.find(LOWORD(wParam));
+
+            if (menuItem)
+            {
+                emit(menuItem->selected);
+            }
+
             return 0;
         }break;
         case WM_CLOSE:
@@ -187,9 +197,9 @@ WNDCLASSEX Window::createWndClass()
     return wndclass;
 }
 
-HWND Window::createHwnd(const WindowRect& rect, UINT style, const std::string& title, HWND parent)
+HWND Window::createHwnd(const WindowRect& rect, UINT style, const std::string& title, const Menu& menu, HWND parent)
 {
-    return CreateWindowEx(0, title.c_str(),
+    return CreateWindowExA(0, title.c_str(),
         title.c_str(),
         style,
         rect.x,
@@ -197,7 +207,7 @@ HWND Window::createHwnd(const WindowRect& rect, UINT style, const std::string& t
         static_cast<int>(rect.width),
         static_cast<int>(rect.height),
         parent,
-        nullptr,
+        menu.handle(),
         GetModuleHandle(nullptr),
         this);
 }

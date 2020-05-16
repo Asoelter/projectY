@@ -1,12 +1,14 @@
 #include "button.h"
 
+#include <util/id_generator.h>
+
 namespace gui
 {
 
 Button::Button(Descriptor desc)
     : descriptor_(desc)
     , hwnd_(NULL)
-    , id_(nextID_++)
+    , id_(IdGenerator<GloballyUnique>::generate())
 {
 }
 

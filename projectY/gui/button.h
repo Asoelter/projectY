@@ -36,8 +36,6 @@ public: //signals
     Signal<> pushed;
 
 private:
-    inline static size_t nextID_ = 1;
-
     Descriptor descriptor_;
     HWND hwnd_;
     size_t id_;

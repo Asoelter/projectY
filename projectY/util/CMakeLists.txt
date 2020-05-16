@@ -5,7 +5,9 @@ project("util")
 set(CMAKE_CXX_STANDARD 17)
 
 add_library(${PROJECT_NAME} uuid.h uuid.cpp 
-							ywin.h error_printer.h)
+							ywin.h 
+							error_printer.h
+							id_generator.h)
 
 target_link_libraries(${PROJECT_NAME} rpcrt4.lib)
 

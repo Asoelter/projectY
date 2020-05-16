@@ -16,6 +16,7 @@
 #include <graphics/vertex_shader.h>
 
 #include <gui/button.h>
+#include <gui/menu.h>
 #include <gui/mouse.h>
 #include <gui/keyboard.h>
 #include <gui/window.h>
@@ -24,8 +25,20 @@
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-    auto window = gui::Window({ 800u, 600u }, "parent window");
-    auto childWin = gui::Window({200, 150, 400, 300 }, "child window", window.handle());
+    gui::MenuDropDown fileDropDown("File");
+
+    gui::MenuItem newItem = gui::MenuItem("New");
+    connect(newItem.selected, Slot<>([]() {MessageBox(NULL, "called", "called", NULL); }));
+    fileDropDown.append(std::move(newItem));
+    fileDropDown.append(gui::MenuItem("Open"));
+    fileDropDown.append(gui::MenuItem("Save"));
+    //fileDropDown.append(gui::MenuItem::seperator);
+    fileDropDown.append(gui::MenuItem("Exit"));
+
+    gui::Menu menu;
+    menu.append(fileDropDown);
+    auto window = gui::Window({ 800u, 600u }, "parent window", menu);
+    auto childWin = gui::Window({200, 150, 400, 300 }, "child window", gui::Menu::Null, window.handle());
     auto description = gui::Button::Descriptor(40, 20, 40, 20, "show");
     auto button = gui::Button(description);
 
