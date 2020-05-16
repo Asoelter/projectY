@@ -42,6 +42,18 @@ struct AreEquatableT<TypeList<>, TypeList<>>
     static constexpr bool value = true;
 };
 
+template<typename T>
+struct AreEquatableT<TypeList<>, TypeList<T>>
+{
+    static constexpr bool value = false;
+};
+
+template<typename T>
+struct AreEquatableT<TypeList<T>, TypeList<>>
+{
+    static constexpr bool value = false;
+};
+
 template<typename T, typename U>
 struct AreEquatableT<TypeList<T>, TypeList<U>>
 {

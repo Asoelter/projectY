@@ -72,7 +72,7 @@ Menu::Menu()
 
 void Menu::append(MenuDropDown& dropdown)
 {
-    AppendMenu(hmenu_, MF_POPUP, reinterpret_cast<UINT>(dropdown.hmenu_), dropdown.text_.c_str());
+    AppendMenu(hmenu_, MF_POPUP, reinterpret_cast<UINT_PTR>(dropdown.hmenu_), dropdown.text_.c_str());
     dropdowns_.push_back(dropdown);
 }
 
@@ -91,7 +91,7 @@ bool Menu::contains(size_t id)
 
 MenuItem* Menu::find(size_t id)
 {
-    for (auto dropdown : dropdowns_)
+    for (auto& dropdown : dropdowns_)
     {
         auto it = dropdown.find(id);
 

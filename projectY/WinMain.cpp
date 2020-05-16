@@ -65,10 +65,10 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     Mesh mesh(vertices);
 
-    connect(gui::Keyboard::upArrowKeyPressed,    Slot<>([&mesh]() {mesh.translate(0.0f, 0.01f); }));
-    connect(gui::Keyboard::rightArrowKeyPressed, Slot<>([&mesh]() {mesh.translate(0.01f, 0.0f); }));
-    connect(gui::Keyboard::downArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(0.0f, -0.01f); }));
-    connect(gui::Keyboard::leftArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(-0.01f, 0.0f); }));
+    connect(gui::Keyboard::upArrowKeyPressed,    Slot<>([&mesh]() {mesh.translate(0.0f, 0.03f); }));
+    connect(gui::Keyboard::rightArrowKeyPressed, Slot<>([&mesh]() {mesh.translate(0.03f, 0.0f); }));
+    connect(gui::Keyboard::downArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(0.0f, -0.03f); }));
+    connect(gui::Keyboard::leftArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(-0.03f, 0.0f); }));
 
     while (window.open())
     {
