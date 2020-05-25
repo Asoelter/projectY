@@ -2,13 +2,16 @@
 #define WINDOW_H
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <containers/signal.h>
 
+#include <util/type_id.h>
 #include <util/ywin.h>
 
 #include "button.h"
+#include "gui_element.h"
 #include "menu.h"
 
 namespace gui
@@ -40,10 +43,10 @@ struct WindowRect
     UINT height;
 };
 
-class Window
+class Window : public GuiElement
 {
 public:
-    Window(const WindowRect& rect, const std::string& title, const Menu& menu = Menu::Null, HWND parent = NULL);
+    Window(const WindowRect& rect, const std::string& title, const Menu& menu = Menu::Null, Window* parent = nullptr);
     ~Window();
 
     //TODO(asoelter): consider a different name like "isProcessingMessages"
@@ -64,8 +67,8 @@ public:
     [[nodiscard]]
     const HWND & handle() const noexcept;
 
-public: //signals
-    Signal<> keyPress;
+    [[nodiscard]]
+    size_t typeId() const noexcept override;
 
 private:
     static LRESULT CALLBACK WndProcSetup(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept;
@@ -74,16 +77,19 @@ private:
 private:
     WNDCLASSEX createWndClass();
     HWND createHwnd(const WindowRect& rect, UINT style, const std::string& title, const Menu& menu, HWND parent);
+    void attach(Window* childWindow);
 
 private:
-    WNDCLASSEX          wndClass_;
-    HWND                hwnd_;
-    UINT                width_;
-    UINT                height_;
-    std::string         title_;
-    std::vector<Button> buttons_;
-    Menu                menu_;
-    bool                open_;
+    using ElementMap = std::unordered_map<std::string, GuiElement*>;
+
+    WNDCLASSEX           wndClass_;
+    HWND                 hwnd_;
+    Window*              parent_;
+    std::vector<Window*> children_;
+    std::vector<Button>  buttons_; 
+    ElementMap           elements_;
+    Menu                 menu_;
+    bool                 open_;
 };
 }
 

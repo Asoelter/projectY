@@ -1,4 +1,6 @@
 #include "window.h"
+#include "window.h"
+#include "window.h"
 
 #include "keyboard.h"
 #include "mouse.h"
@@ -8,12 +10,12 @@
 
 namespace gui
 {
-Window::Window(const WindowRect& rect, const std::string& title, const Menu& menu, HWND parent)
-    : wndClass_({ 0 })
+Window::Window(const WindowRect& rect, const std::string& title, const Menu& menu, Window* parent)
+    : GuiElement(rect.x, rect.y, rect.width, rect.height, title, this)
+    , wndClass_({ 0 })
     , hwnd_(0)
-    , width_(rect.width)
-    , height_(rect.height)
-    , title_(title)
+    , parent_(parent)
+    , children_()
     , buttons_()
     , menu_(menu)
     , open_(true)
@@ -32,7 +34,15 @@ Window::Window(const WindowRect& rect, const std::string& title, const Menu& men
         style |= CS_DBLCLKS;
     }
 
-    hwnd_ = createHwnd(rect, style, title_, menu_, parent);
+    HWND parentHandle = NULL;
+
+    if (parent)
+    {
+        parentHandle = parent->handle();
+        parent->attach(this);
+    }
+
+    hwnd_ = createHwnd(rect, style, name_, menu_, parentHandle);
 
     ShowWindow(hwnd_, SW_SHOW);
     UpdateWindow(hwnd_);
@@ -64,17 +74,41 @@ void Window::attach(Button&& button) noexcept
 {
     button.attachTo(hwnd_);
 
-    buttons_.push_back(button);
+    buttons_.push_back(std::move(button));
+    auto& backButton = buttons_.back();
+    elements_[backButton.name()] = &backButton;
 }
 
 LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept
 {
     switch (message)
     {
+        case WM_MOVE:
+        {
+            xPos_ = LOWORD(lParam);
+            yPos_ = HIWORD(lParam);
+        }break;
         case WM_SIZE:
         {
+            const auto oldWidth = width_;
+            const auto oldHeight = height_;
             width_ = LOWORD(lParam);
             height_ = HIWORD(lParam);
+
+            for (auto elem : elements_)
+            {
+                if (elem.second && elem.second->typeId() == TypeId<Window>)
+                {
+                    auto win = static_cast<Window*>(elem.second);
+                    const auto horizontalScale = (width_ / static_cast<double>(oldWidth));
+                    const auto verticalScale = (height_ / static_cast<double>(oldHeight));
+                    const auto x = static_cast<int>(horizontalScale * win->xPos());
+                    const auto y = static_cast<int>(verticalScale   * win->yPos());
+                    const auto w = static_cast<int>(horizontalScale * win->width());
+                    const auto h = static_cast<int>(verticalScale   * win->height());
+                    MoveWindow(win->handle(), x, y, w, h, TRUE);
+                }
+            }
             return 0;
         }break;
         case WM_COMMAND:
@@ -155,6 +189,11 @@ const HWND & Window::handle() const noexcept
     return hwnd_;
 }
 
+size_t Window::typeId() const noexcept
+{
+    return TypeId<Window>;
+}
+
 LRESULT CALLBACK Window::WndProcSetup(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept
 {
     if (message == WM_NCCREATE)
@@ -192,7 +231,7 @@ WNDCLASSEX Window::createWndClass()
     wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
     wndclass.hbrBackground = CreateSolidBrush(RGB(50, 50, 50));
     wndclass.lpszMenuName = nullptr;
-    wndclass.lpszClassName = title_.c_str();
+    wndclass.lpszClassName = name_.c_str();
 
     return wndclass;
 }
@@ -210,6 +249,12 @@ HWND Window::createHwnd(const WindowRect& rect, UINT style, const std::string& t
         menu.handle(),
         GetModuleHandle(nullptr),
         this);
+}
+
+void Window::attach(Window* childWindow)
+{
+    children_.push_back(childWindow);
+    elements_[childWindow->name_] = childWindow;
 }
 
 }

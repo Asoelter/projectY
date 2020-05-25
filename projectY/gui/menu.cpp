@@ -10,7 +10,7 @@ const MenuItem MenuItem::seperator{ NULL, MF_SEPARATOR};
 MenuItem::MenuItem(const std::string& text)
     : selected()
     , flags_(MF_STRING)
-    , id_(IdGenerator<GloballyUnique>::generate())
+    , id_(UniqueIdGenerator::generate())
     , text_(text)
 {
 }
@@ -18,7 +18,7 @@ MenuItem::MenuItem(const std::string& text)
 MenuItem::MenuItem(const char* text, UINT flag)
     : selected()
     , flags_(flag)
-    , id_(IdGenerator<GloballyUnique>::generate())
+    , id_(UniqueIdGenerator::generate())
     , text_(text == NULL ? "" : text)
 {
 }

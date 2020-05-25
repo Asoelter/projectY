@@ -38,7 +38,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     gui::Menu menu;
     menu.append(fileDropDown);
     auto window = gui::Window({ 800u, 600u }, "parent window", menu);
-    auto childWin = gui::Window({200, 150, 400, 300 }, "child window", gui::Menu::Null, window.handle());
+    auto childWin = gui::Window({200, 150, 400, 300 }, "child window", gui::Menu::Null, &window);
     auto description = gui::Button::Descriptor(40, 20, 40, 20, "show");
     auto button = gui::Button(description);
 

@@ -13,4 +13,6 @@ private:
     inline static size_t next = 0;
 };
 
+using UniqueIdGenerator = IdGenerator<GloballyUnique>;
+
 #endif //ID_GENERATOR_H

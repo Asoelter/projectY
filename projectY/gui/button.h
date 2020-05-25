@@ -7,10 +7,12 @@
 
 #include <util/ywin.h>
 
+#include "gui_element.h"
+
 namespace gui
 {
 
-class Button
+class Button : public GuiElement
 {
 public:
     struct Descriptor
@@ -32,11 +34,16 @@ public:
     [[nodiscard]]
     size_t id() const noexcept;
 
+    [[nodiscard]]
+    std::string name() const noexcept;
+
+    [[nodiscard]]
+    size_t typeId() const noexcept override;
+
 public: //signals
     Signal<> pushed;
 
 private:
-    Descriptor descriptor_;
     HWND hwnd_;
     size_t id_;
 };

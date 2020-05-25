@@ -1,5 +1,4 @@
 #include "camera.h"
-#include "camera.h"
 
 namespace
 {
@@ -12,15 +11,14 @@ DirectX::XMMATRIX makeProjection(const WorldDescriptor& world)
     const auto deltay = (world.ymax + world.ymin) / 2.0f;
     const auto deltaz = (world.zmax + world.zmin) / 2.0f;
 
-    const auto rawProjection = DirectX::XMMatrixOrthographicLH(width, height, world.zmin, world.zmax);
-    const auto projTrans = DirectX::XMMatrixTranslation(-deltax, -deltay, -deltaz);
+    const auto projection = DirectX::XMMatrixOrthographicLH(width, height, world.zmin, world.zmax);
+    const auto translation = DirectX::XMMatrixTranslation(-deltax, -deltay, -deltaz);
 
-    return projTrans * rawProjection;
+    return translation * projection;
 }
 
 DirectX::XMMATRIX makeView(const ViewDescriptor& view)
 {
-
     const auto xmEye = view.eye.toXMVector();
     const auto xmCenter = view.center.toXMVector();
     const auto xmUp = view.up.toXMVector();
