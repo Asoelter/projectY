@@ -22,7 +22,10 @@ template<typename ...Args>
 struct IsListT<TypeList<Args...>> : std::true_type {};
 
 template<typename LhsList, typename RhsList>
-struct AreEquatableT;
+struct AreSimilarT;
+
+template<typename List, typename T>
+struct ContainsT;
 
 template<typename Head, typename ...Tail>
 struct TailT<TypeList<Head, Tail...>>
@@ -37,37 +40,53 @@ struct HeadT<TypeList<Head, Tail...>>
 };
 
 template<>
-struct AreEquatableT<TypeList<>, TypeList<>>
+struct AreSimilarT<TypeList<>, TypeList<>>
 {
     static constexpr bool value = true;
 };
 
 template<typename T>
-struct AreEquatableT<TypeList<>, TypeList<T>>
+struct AreSimilarT<TypeList<>, TypeList<T>>
 {
     static constexpr bool value = false;
 };
 
 template<typename T>
-struct AreEquatableT<TypeList<T>, TypeList<>>
+struct AreSimilarT<TypeList<T>, TypeList<>>
 {
     static constexpr bool value = false;
 };
 
 template<typename T, typename U>
-struct AreEquatableT<TypeList<T>, TypeList<U>>
+struct AreSimilarT<TypeList<T>, TypeList<U>>
 {
     static constexpr bool value = std::is_convertible_v<RemoveCVRef<T>, RemoveCVRef<U>>;
 };
 
 template<typename LhsList, typename RhsList>
-struct AreEquatableT
+struct AreSimilarT
 {
     static_assert(IsListT<LhsList>::value && IsListT<RhsList>::value);
+
     static constexpr bool value = std::is_convertible_v<
         RemoveCVRef<Head<RhsList>>, 
         RemoveCVRef<Head<LhsList>>
-    > && AreEquatableT<Tail<LhsList>, Tail<RhsList>>::value;
+    > && AreSimilarT<Tail<LhsList>, Tail<RhsList>>::value;
+};
+
+template<typename T>
+struct ContainsT<TypeList<>, T>
+{
+    static constexpr bool value = false;
+};
+
+template<typename List, typename T>
+struct ContainsT
+{
+    static_assert(IsListT<List>::value);
+
+    static constexpr bool value = std::is_same_v<RemoveCVRef<HeadT<List>::type>, RemoveCVRef<T>>
+        || ContainsT<Tail<List>, T>::value;
 };
 
 template<typename List>
@@ -80,7 +99,10 @@ template<typename List>
 using IsList = typename IsListT<List>::type;
 
 template<typename LhsList, typename RhsList>
-constexpr auto AreEquatable = AreEquatableT<LhsList, RhsList>::value;
+constexpr auto AreSimilar = AreSimilarT<LhsList, RhsList>::value;
+
+template<typename List, typename T>
+constexpr auto Contains = ContainsT<List, T>::value;
 
 
 #endif //CONTAINER_TRAITS_H

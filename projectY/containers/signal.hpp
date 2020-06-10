@@ -7,13 +7,19 @@ void Signal<Args...>::connect(const std::function<void(Args...)>& func)
 }
 
 template<typename ...Args>
-void Signal<Args...>::connect(const Slot<Args...>& func)
+void Signal<Args...>::connect(const Slot<Args...>& slot)
 {
-    functions_.push_back(func);
+    functions_.push_back(slot);
 }
 
 template<typename ...Args>
-void Signal<Args...>::disconnect(const Slot<Args...>& func)
+void Signal<Args...>::connect(Slot<Args...>&& slot)
+{
+    functions_.emplace_back(std::move(slot));
+}
+
+template<typename ...Args>
+void Signal<Args...>::disconnect(const Slot<Args...>& slot)
 {
     functions_.erase(std::find(functions_.begin(), functions_.end(), func));
 }

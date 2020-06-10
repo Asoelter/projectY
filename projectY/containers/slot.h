@@ -17,8 +17,6 @@ public:
     bool operator!=(const Slot& rhs) const;
 
 private:
-    static size_t nextId;
-private:
     std::function<void(Args...)> function_;
     size_t id_;
 };

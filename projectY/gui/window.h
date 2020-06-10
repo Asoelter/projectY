@@ -46,7 +46,7 @@ struct WindowRect
 class Window : public GuiElement
 {
 public:
-    Window(const WindowRect& rect, const std::string& title, const Menu& menu = Menu::Null, Window* parent = nullptr);
+    Window(const WindowRect& rect, const std::string& title, Window* parent = nullptr);
     ~Window();
 
     //TODO(asoelter): consider a different name like "isProcessingMessages"
@@ -55,6 +55,7 @@ public:
     void update() noexcept;
 
     void attach(Button&& button) noexcept;
+    void attach(Menu&& menu) noexcept;
 
     LRESULT WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept;
 

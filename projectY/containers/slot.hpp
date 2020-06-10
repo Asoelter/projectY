@@ -1,10 +1,16 @@
-template<typename ...Args>
-size_t Slot<Args...>::nextId = 0;
+#include <util/id_generator.h>
+
+namespace
+{
+struct LocalToSlot {};
+}
+
+using FunctionIdGenerator = IdGenerator<LocalToSlot>;
 
 template<typename ...Args>
 Slot<Args...>::Slot(const FunctionType& func)
     : function_(func)
-    , id_(++nextId)
+    , id_(FunctionIdGenerator::generate())
 {
 
 }

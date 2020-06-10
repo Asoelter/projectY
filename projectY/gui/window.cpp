@@ -1,6 +1,8 @@
 #include "window.h"
 #include "window.h"
 #include "window.h"
+#include "window.h"
+#include "window.h"
 
 #include "keyboard.h"
 #include "mouse.h"
@@ -10,14 +12,14 @@
 
 namespace gui
 {
-Window::Window(const WindowRect& rect, const std::string& title, const Menu& menu, Window* parent)
+Window::Window(const WindowRect& rect, const std::string& title, Window* parent)
     : GuiElement(rect.x, rect.y, rect.width, rect.height, title, this)
     , wndClass_({ 0 })
     , hwnd_(0)
     , parent_(parent)
     , children_()
     , buttons_()
-    , menu_(menu)
+    , menu_()
     , open_(true)
 {
     const auto hInstance = GetModuleHandle(nullptr);
@@ -77,6 +79,13 @@ void Window::attach(Button&& button) noexcept
     buttons_.push_back(std::move(button));
     auto& backButton = buttons_.back();
     elements_[backButton.name()] = &backButton;
+}
+
+void Window::attach(Menu&& menu) noexcept
+{
+    menu_ = std::move(menu);
+    elements_[menu.name()] = &menu;
+    SetMenu(hwnd_, menu.handle());
 }
 
 LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept

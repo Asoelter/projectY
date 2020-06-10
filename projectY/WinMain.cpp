@@ -23,22 +23,29 @@
 
 #include <math/vec3.h>
 
-INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+INT WINAPI WinMain(_In_     HINSTANCE hInstance, 
+                   _In_opt_ HINSTANCE hPrevInstance, 
+                   _In_     LPSTR     lpCmdLine, 
+                   _In_     int       nShowCmd)
 {
     gui::MenuDropDown fileDropDown("File");
 
-    gui::MenuItem newItem = gui::MenuItem("New");
-    connect(newItem.selected, Slot<>([]() {MessageBox(NULL, "called", "called", NULL); }));
-    fileDropDown.append(std::move(newItem));
+    fileDropDown.append(gui::MenuItem("New"));
     fileDropDown.append(gui::MenuItem("Open"));
     fileDropDown.append(gui::MenuItem("Save"));
-    //fileDropDown.append(gui::MenuItem::seperator);
+    fileDropDown.append(gui::MenuItem::seperator);
     fileDropDown.append(gui::MenuItem("Exit"));
 
-    gui::Menu menu;
+    gui::Menu menu("Menu");
     menu.append(fileDropDown);
-    auto window = gui::Window({ 800u, 600u }, "parent window", menu);
-    auto childWin = gui::Window({200, 150, 400, 300 }, "child window", gui::Menu::Null, &window);
+
+    auto newItem = menu.element("File")->elementAs<gui::MenuItem>("New");
+    connect(newItem->selected, Slot<>([]() {assert(false); }));
+
+    auto window = gui::Window({ 800u, 600u }, "parent window");
+    window.attach(std::move(menu));
+
+    auto childWin = gui::Window({200, 150, 400, 300 }, "child window", &window);
     auto description = gui::Button::Descriptor(40, 20, 40, 20, "show");
     auto button = gui::Button(description);
 

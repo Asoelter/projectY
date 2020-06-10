@@ -7,6 +7,9 @@ if(CMAKE_CONFIGURATION_TYPES STREQUAL "Debug")
 	add_compile_definitions(DEBUG=1)
 endif(CMAKE_CONFIGURATION_TYPES STREQUAL "Debug")
 
+add_compile_definitions(NOMINMAX=1)
+add_compile_definitions(WIN32_LEAN_AND_MEAN=1)
+
 # Add source to this project's executable.
 add_executable (${PROJECT_NAME} WIN32 WinMain.cpp)
 

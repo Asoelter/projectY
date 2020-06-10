@@ -1,30 +1,41 @@
 #include "menu.h"
 
+#include <algorithm>
+
 #include <util/id_generator.h>
+#include <util/type_id.h>
 
 namespace gui
 {
     
-const MenuItem MenuItem::seperator{ NULL, MF_SEPARATOR};
+const MenuItem MenuItem::seperator("separator", MF_SEPARATOR);
 
 MenuItem::MenuItem(const std::string& text)
-    : selected()
+    : GuiElement(0, 0, 0, 0, text, this)
+    , selected()
     , flags_(MF_STRING)
-    , id_(UniqueIdGenerator::generate())
+    , id_(GlobalIdGenerator::generate())
     , text_(text)
 {
 }
 
+size_t MenuItem::typeId() const noexcept
+{
+    return TypeId<MenuItem>;
+}
+
 MenuItem::MenuItem(const char* text, UINT flag)
-    : selected()
+    : GuiElement(0, 0, 0, 0, text, this)
+    , selected()
     , flags_(flag)
-    , id_(UniqueIdGenerator::generate())
+    , id_(GlobalIdGenerator::generate())
     , text_(text == NULL ? "" : text)
 {
 }
 
 MenuDropDown::MenuDropDown(const std::string& text)
-    : hmenu_(CreateMenu())
+    : GuiElement(0, 0, 0, 0, text, this)
+    , hmenu_(CreateMenu())
     , menuItems_()
     , text_(text)
 {
@@ -33,39 +44,55 @@ MenuDropDown::MenuDropDown(const std::string& text)
 void MenuDropDown::append(MenuItem&& item)
 {
     AppendMenu(hmenu_, item.flags_, item.id_, item.text_.c_str());
-    menuItems_.push_back(std::move(item));
+    menuItems_.emplace_back(std::move(item));
+
+    auto* lastItem = &menuItems_.back();
+    elements_[lastItem->name()] = lastItem;
 }
 
-bool MenuDropDown::contains(size_t id)
+void MenuDropDown::append(const MenuItem& item)
 {
-    for (auto item : menuItems_)
-    {
-        if (item.id_ == id)
-        {
-            return true;
-        }
-    }
-
-    return false;
+    /*AppendMenu(hmenu_, item.flags_, item.id_, item.text_.c_str());
+    menuItems_.push_back(item);
+    auto* lastItem = &menuItems_.back();
+    elements_[lastItem->name()] = lastItem;*/
+    auto copy = item;
+    append(std::move(copy));
 }
 
-MenuItem* MenuDropDown::find(size_t id)
+bool MenuDropDown::contains(MenuItem::Id id)
 {
-    for (auto& item : menuItems_)
+    auto predicate = [id](const MenuItem& item) {return item.id_ == id; };
+
+    auto it = std::find_if(menuItems_.begin(), menuItems_.end(), predicate);
+
+    return it == menuItems_.end();
+}
+
+MenuItem* MenuDropDown::find(MenuItem::Id id)
+{
+    auto containsId = [id](const MenuItem& item) {return item.id_ == id; };
+
+    auto it = std::find_if(menuItems_.begin(), menuItems_.end(), containsId);
+
+    if (it == menuItems_.end())
     {
-        if (item.id_ == id)
-        {
-            return &item;
-        }
+        return nullptr;
     }
 
-    return nullptr;
+    return &*it;
+}
+
+size_t MenuDropDown::typeId() const noexcept
+{
+    return TypeId<MenuDropDown>;
 }
 
 Menu Menu::Null{ Menu::NullInit{} };
 
-Menu::Menu()
-    : hmenu_(CreateMenu())
+Menu::Menu(const std::string& name)
+    : GuiElement(0u, 0u, 0u, 0u, name, this)
+    , hmenu_(CreateMenu())
     , dropdowns_()
 {
 }
@@ -74,9 +101,12 @@ void Menu::append(MenuDropDown& dropdown)
 {
     AppendMenu(hmenu_, MF_POPUP, reinterpret_cast<UINT_PTR>(dropdown.hmenu_), dropdown.text_.c_str());
     dropdowns_.push_back(dropdown);
+    auto* lastDropdown = &dropdowns_.back();
+    elements_[lastDropdown->name()] = lastDropdown;
+    return;
 }
 
-bool Menu::contains(size_t id)
+bool Menu::contains(MenuItem::Id id) const noexcept
 {
     for (auto dropdown : dropdowns_)
     {
@@ -89,7 +119,7 @@ bool Menu::contains(size_t id)
     return false;
 }
 
-MenuItem* Menu::find(size_t id)
+MenuItem* Menu::find(MenuItem::Id id) noexcept
 {
     for (auto& dropdown : dropdowns_)
     {
@@ -109,8 +139,14 @@ HMENU Menu::handle() const
     return hmenu_;
 }
 
+size_t Menu::typeId() const noexcept
+{
+    return TypeId<Menu>;
+}
+
 Menu::Menu(NullInit)
-    : hmenu_(NULL)
+    : GuiElement(0u, 0u, 0u, 0u, "separator", this)
+    , hmenu_(NULL)
 {
 }
 

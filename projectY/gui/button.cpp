@@ -10,7 +10,7 @@ namespace gui
 Button::Button(Descriptor desc)
     : GuiElement(desc.x, desc.y, desc.width, desc.height, desc.title, this)
     , hwnd_(NULL)
-    , id_(UniqueIdGenerator::generate())
+    , id_(GlobalIdGenerator::generate())
 {
 }
 
