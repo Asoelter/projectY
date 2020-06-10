@@ -40,7 +40,7 @@ INT WINAPI WinMain(_In_     HINSTANCE hInstance,
     menu.append(fileDropDown);
 
     auto newItem = menu.element("File")->elementAs<gui::MenuItem>("New");
-    connect(newItem->selected, Slot<>([]() {assert(false); }));
+    connect(newItem->selected, Slot<>([]() {MessageBox(NULL, "Pressed", "Pressed", NULL); }));
 
     auto window = gui::Window({ 800u, 600u }, "parent window");
     window.attach(std::move(menu));

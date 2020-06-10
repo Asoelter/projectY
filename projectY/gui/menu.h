@@ -1,6 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include <list>
 #include <string>
 #include <vector>
 
@@ -81,9 +82,9 @@ public:
     size_t typeId() const noexcept override;
 
 private:
-    HMENU hmenu_;
-    std::vector<MenuItem> menuItems_;
-    std::string text_;
+    HMENU               hmenu_;
+    std::list<MenuItem> menuItems_;
+    std::string         text_;
 
     friend class Menu;
 };
@@ -116,8 +117,8 @@ private:
     Menu(NullInit);
 
 private:
-    HMENU                     hmenu_;
-    std::vector<MenuDropDown> dropdowns_;
+    HMENU                   hmenu_;
+    std::list<MenuDropDown> dropdowns_;
 };
 
 }
