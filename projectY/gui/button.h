@@ -27,7 +27,10 @@ public:
     };
 public:
     Button(Descriptor desc);
+    Button(Button&& rhs) noexcept;
     ~Button();
+
+    void operator=(Button&& rhs) noexcept;
 
     void attachTo(HWND hwnd);
 

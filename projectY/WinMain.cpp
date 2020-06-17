@@ -33,11 +33,11 @@ INT WINAPI WinMain(_In_     HINSTANCE hInstance,
     fileDropDown.append(gui::MenuItem("New"));
     fileDropDown.append(gui::MenuItem("Open"));
     fileDropDown.append(gui::MenuItem("Save"));
-    fileDropDown.append(gui::MenuItem::seperator);
+    //fileDropDown.append(gui::MenuItem::seperator);
     fileDropDown.append(gui::MenuItem("Exit"));
 
     gui::Menu menu("Menu");
-    menu.append(fileDropDown);
+    menu.append(std::move(fileDropDown));
 
     auto newItem = menu.element("File")->elementAs<gui::MenuItem>("New");
     connect(newItem->selected, Slot<>([]() {MessageBox(NULL, "Pressed", "Pressed", NULL); }));

@@ -14,12 +14,39 @@ Button::Button(Descriptor desc)
 {
 }
 
+Button::Button(Button&& rhs) noexcept
+    : GuiElement(rhs.xPos_, rhs.yPos_, rhs.width_, rhs.height_, rhs.name_, this)
+    , hwnd_(rhs.hwnd_)
+    , id_(rhs.id_)
+{
+    rhs.xPos_ = 0;
+    rhs.yPos_ = 0;
+    rhs.width_ = 0;
+    rhs.height_ = 0;
+    rhs.name_.clear();
+}
+
 Button::~Button()
 {
     if (hwnd_)
     {
         DestroyWindow(hwnd_);
     }
+}
+
+void Button::operator=(Button&& rhs) noexcept
+{
+    xPos_   = rhs.xPos_;
+    yPos_   = rhs.yPos_;
+    width_  = rhs.width_;
+    height_ = rhs.height_;
+    name_   = std::move(rhs.name_);
+
+    rhs.xPos_   = 0;
+    rhs.yPos_   = 0;
+    rhs.width_  = 0;
+    rhs.height_ = 0;
+    rhs.name_.clear();
 }
 
 void Button::attachTo(HWND hwnd)

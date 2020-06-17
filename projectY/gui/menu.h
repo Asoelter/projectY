@@ -70,10 +70,10 @@ public:
     GUI_ELEMENT_METHODS
 
     void append(MenuItem&& item);
-    void append(const MenuItem& item);
+    //void append(const MenuItem& item);
 
     [[nodiscard]] 
-    bool contains(MenuItem::Id id);
+    bool contains(MenuItem::Id id) const;
 
     [[nodiscard]] 
     MenuItem* find(MenuItem::Id id);
@@ -96,7 +96,8 @@ public:
 
     GUI_ELEMENT_METHODS
 
-    void append(MenuDropDown& dropdown);
+    void append(MenuDropDown&& dropdown);
+    //void append(const MenuDropDown& dropdown);
 
     [[nodiscard]] 
     bool contains(MenuItem::Id id) const noexcept;

@@ -26,7 +26,47 @@ public:
 
     }
 
+    GuiElement(const GuiElement& rhs) = delete;
+
+    GuiElement(GuiElement&& rhs)
+    {
+        xPos_ = rhs.xPos_;
+        yPos_ = rhs.yPos_;
+        width_ = rhs.width_;
+        height_ = rhs.height_;
+        name_ = std::move(rhs.name_);
+        typeId_ = rhs.typeId();
+        elements_ = std::move(rhs.elements_);
+
+        rhs.xPos_ = 0;
+        rhs.yPos_ = 0;
+        rhs.width_ = 0;
+        rhs.height_ = 0;
+        rhs.name_.clear();
+        rhs.elements_.clear();
+    }
+
     virtual ~GuiElement() = default;
+
+    GuiElement& operator=(const GuiElement& rhs) = delete;
+
+    void operator=(GuiElement&& rhs)
+    {
+        xPos_ = rhs.xPos_;
+        yPos_ = rhs.yPos_;
+        width_ = rhs.width_;
+        height_ = rhs.height_;
+        name_ = std::move(rhs.name_);
+        typeId_ = rhs.typeId();
+        elements_ = std::move(rhs.elements_);
+
+        rhs.xPos_ = 0;
+        rhs.yPos_ = 0;
+        rhs.width_ = 0;
+        rhs.height_ = 0;
+        rhs.name_.clear();
+        rhs.elements_.clear();
+    }
 
     [[nodiscard]]
     virtual UINT xPos() const noexcept { return xPos_; }
@@ -63,6 +103,12 @@ public:
     NonOwningPtr<T> elementAs(const std::string& name)
     {
         auto rawResult = element(name);
+
+        if (!rawResult || rawResult->typeId() != TypeId<T>)
+        {
+            return nullptr;
+        }
+
         auto castedResult = dynamic_cast<T*>(rawResult);
         return castedResult;
     }
@@ -73,13 +119,13 @@ protected:
     using ElementPtr = NonOwningPtr<GuiElement>;
     using ElementMap = std::unordered_map<std::string, ElementPtr>;
 
-    UINT xPos_;
-    UINT yPos_;
-    UINT width_;
-    UINT height_;
+    UINT        xPos_;
+    UINT        yPos_;
+    UINT        width_;
+    UINT        height_;
     std::string name_;
-    size_t typeId_;
-    ElementMap elements_;
+    size_t      typeId_;
+    ElementMap  elements_;
 };
 
 }

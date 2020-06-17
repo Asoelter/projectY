@@ -1,4 +1,6 @@
 #include "menu.h"
+#include "menu.h"
+#include "menu.h"
 
 #include <algorithm>
 
@@ -50,17 +52,7 @@ void MenuDropDown::append(MenuItem&& item)
     elements_[lastItem->name()] = lastItem;
 }
 
-void MenuDropDown::append(const MenuItem& item)
-{
-    /*AppendMenu(hmenu_, item.flags_, item.id_, item.text_.c_str());
-    menuItems_.push_back(item);
-    auto* lastItem = &menuItems_.back();
-    elements_[lastItem->name()] = lastItem;*/
-    auto copy = item;
-    append(std::move(copy));
-}
-
-bool MenuDropDown::contains(MenuItem::Id id)
+bool MenuDropDown::contains(MenuItem::Id id) const
 {
     auto predicate = [id](const MenuItem& item) {return item.id_ == id; };
 
@@ -97,10 +89,10 @@ Menu::Menu(const std::string& name)
 {
 }
 
-void Menu::append(MenuDropDown& dropdown)
+void Menu::append(MenuDropDown&& dropdown)
 {
     AppendMenu(hmenu_, MF_POPUP, reinterpret_cast<UINT_PTR>(dropdown.hmenu_), dropdown.text_.c_str());
-    dropdowns_.push_back(dropdown);
+    dropdowns_.push_back(std::move(dropdown));
     auto* lastDropdown = &dropdowns_.back();
     elements_[lastDropdown->name()] = lastDropdown;
     return;
@@ -108,7 +100,7 @@ void Menu::append(MenuDropDown& dropdown)
 
 bool Menu::contains(MenuItem::Id id) const noexcept
 {
-    for (auto dropdown : dropdowns_)
+    for (const auto& dropdown : dropdowns_)
     {
         if (dropdown.contains(id))
         {

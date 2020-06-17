@@ -1,8 +1,4 @@
 #include "window.h"
-#include "window.h"
-#include "window.h"
-#include "window.h"
-#include "window.h"
 
 #include "keyboard.h"
 #include "mouse.h"
@@ -122,7 +118,7 @@ LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) n
         }break;
         case WM_COMMAND:
         {
-            for (auto button : buttons_)
+            for (auto& button : buttons_)
             {
                 if (LOWORD(wParam) == button.id())
                 {
