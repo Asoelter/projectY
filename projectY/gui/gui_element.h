@@ -4,7 +4,7 @@
 #include <limits>
 #include <string>
 
-#include <util/non_owning_ptr.h>
+#include <util/pointer.h>
 #include <util/type_id.h>
 #include <util/ywin.h>
 

@@ -33,7 +33,7 @@ INT WINAPI WinMain(_In_     HINSTANCE hInstance,
     fileDropDown.append(gui::MenuItem("New"));
     fileDropDown.append(gui::MenuItem("Open"));
     fileDropDown.append(gui::MenuItem("Save"));
-    //fileDropDown.append(gui::MenuItem::seperator);
+    fileDropDown.append(gui::MenuItem::seperator("file_seperator"));
     fileDropDown.append(gui::MenuItem("Exit"));
 
     gui::Menu menu("Menu");
@@ -77,7 +77,7 @@ INT WINAPI WinMain(_In_     HINSTANCE hInstance,
     connect(gui::Keyboard::downArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(0.0f, -0.03f); }));
     connect(gui::Keyboard::leftArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(-0.03f, 0.0f); }));
 
-    while (window.open())
+    while (window.isOpen())
     {
         window.update();
 

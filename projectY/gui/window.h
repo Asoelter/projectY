@@ -49,9 +49,8 @@ public:
     Window(const WindowRect& rect, const std::string& title, Window* parent = nullptr);
     ~Window();
 
-    //TODO(asoelter): consider a different name like "isProcessingMessages"
     [[nodiscard]]
-    bool open() const noexcept;
+    bool isOpen() const noexcept;
     void update() noexcept;
 
     void attach(Button&& button) noexcept;

@@ -14,11 +14,17 @@ Button::Button(Descriptor desc)
 {
 }
 
+//If this causes trouble in the future
+//it should probably call GuiElement's
+//move constructor with rhs as a 
+//GuiElement
 Button::Button(Button&& rhs) noexcept
     : GuiElement(rhs.xPos_, rhs.yPos_, rhs.width_, rhs.height_, rhs.name_, this)
     , hwnd_(rhs.hwnd_)
     , id_(rhs.id_)
 {
+    elements_ = std::move(rhs.elements_);
+
     rhs.xPos_ = 0;
     rhs.yPos_ = 0;
     rhs.width_ = 0;

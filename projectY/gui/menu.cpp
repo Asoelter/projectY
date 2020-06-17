@@ -1,6 +1,7 @@
 #include "menu.h"
 #include "menu.h"
 #include "menu.h"
+#include "menu.h"
 
 #include <algorithm>
 
@@ -10,8 +11,6 @@
 namespace gui
 {
     
-const MenuItem MenuItem::seperator("separator", MF_SEPARATOR);
-
 MenuItem::MenuItem(const std::string& text)
     : GuiElement(0, 0, 0, 0, text, this)
     , selected()
@@ -26,12 +25,17 @@ size_t MenuItem::typeId() const noexcept
     return TypeId<MenuItem>;
 }
 
-MenuItem::MenuItem(const char* text, UINT flag)
+MenuItem MenuItem::seperator(const std::string& name)
+{
+    return MenuItem(name, MF_SEPARATOR);
+}
+
+MenuItem::MenuItem(const std::string& text, UINT flag)
     : GuiElement(0, 0, 0, 0, text, this)
     , selected()
     , flags_(flag)
     , id_(GlobalIdGenerator::generate())
-    , text_(text == NULL ? "" : text)
+    , text_(text)
 {
 }
 

@@ -47,13 +47,17 @@ public:
     [[nodiscard]]
     size_t typeId() const noexcept override;
 
-    static const MenuItem seperator;
+public: //static functions
+    //consider making seperators a seperate class that
+    //inherit from MenuItem. This will make parsing 
+    //for yml easier
+    static MenuItem seperator(const std::string& name);
 
 public: //slots
     Signal<> selected;
 
 private:
-    MenuItem(const char* text, UINT flag);
+    MenuItem(const std::string& text, UINT flag);
 private:
     UINT flags_;
     size_t id_; 
@@ -70,7 +74,6 @@ public:
     GUI_ELEMENT_METHODS
 
     void append(MenuItem&& item);
-    //void append(const MenuItem& item);
 
     [[nodiscard]] 
     bool contains(MenuItem::Id id) const;
@@ -97,7 +100,6 @@ public:
     GUI_ELEMENT_METHODS
 
     void append(MenuDropDown&& dropdown);
-    //void append(const MenuDropDown& dropdown);
 
     [[nodiscard]] 
     bool contains(MenuItem::Id id) const noexcept;

@@ -9,7 +9,7 @@ add_library(${PROJECT_NAME} uuid.h uuid.cpp
 							error_printer.h
 							id_generator.h 
 							type_id.h 
-							non_owning_ptr.h)
+							pointer.h)
 
 target_link_libraries(${PROJECT_NAME} rpcrt4.lib)
 

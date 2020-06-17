@@ -55,7 +55,7 @@ Window::~Window()
 }
 
 [[nodiscard]]
-bool Window::open() const noexcept
+bool Window::isOpen() const noexcept
 {
     return open_;
 }
