@@ -8,8 +8,9 @@
 #include <util/type_id.h>
 #include <util/ywin.h>
 
-namespace gui
-{
+#include "namespace.h"
+
+GUI_NAMESPACE_BEGIN
 
 class GuiElement
 {
@@ -128,5 +129,6 @@ protected:
     ElementMap  elements_;
 };
 
-}
+GUI_NAMESPACE_END
+
 #endif //GUI_ELEMENT_H

@@ -8,9 +8,9 @@
 #include <util/ywin.h>
 
 #include "gui_element.h"
+#include "namespace.h"
 
-namespace gui
-{
+GUI_NAMESPACE_BEGIN
 
 class Button : public GuiElement
 {
@@ -51,6 +51,6 @@ private:
     size_t id_;
 };
 
-}
+GUI_NAMESPACE_END
 
 #endif //BUTTON_H

@@ -1,6 +1,10 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
+#include "namespace.h"
+
+YML_NAMESPACE_BEGIN
+
 class Token
 {
 public:
@@ -32,5 +36,7 @@ public:
 private:
     double value_;
 };
+
+YML_NAMESPACE_END
 
 #endif// TOKEN_H

@@ -10,6 +10,7 @@
 #include <util/ywin.h>
 
 #include "gui_element.h"
+#include "namespace.h"
 
 #define GUI_ELEMENT_METHODS               \
     [[nodiscard]]                         \
@@ -29,8 +30,7 @@
     {return GuiElement::undefinedMethod;} \
 
 
-namespace gui
-{
+GUI_NAMESPACE_BEGIN
 
 class MenuDropDown;
 class Menu;
@@ -124,7 +124,7 @@ private:
     std::list<MenuDropDown> dropdowns_;
 };
 
-}
+GUI_NAMESPACE_END
 
 #ifdef GUI_ELEMENT_METHODS
 #   undef GUI_ELEMENT_METHODS

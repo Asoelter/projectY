@@ -6,8 +6,10 @@
 
 #include <DirectXMath.h>
 
-namespace math
-{
+#include "namespace.h"
+
+MATH_NAMESPACE_BEGIN
+
 template<
         typename T,
         typename = std::enable_if<std::is_arithmetic_v<T>>
@@ -65,7 +67,8 @@ struct vec3
         T data[size];
     };
 };
-}
+
+MATH_NAMESPACE_END
 
 template<typename T, typename U>
 constexpr auto dot(const math::vec3<T>& lhs, const math::vec3<U>& rhs)

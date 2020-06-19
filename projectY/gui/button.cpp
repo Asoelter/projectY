@@ -1,11 +1,8 @@
 #include "button.h"
-#include "button.h"
-#include "button.h"
 
 #include <util/id_generator.h>
 
-namespace gui
-{
+GUI_NAMESPACE_BEGIN
 
 Button::Button(Descriptor desc)
     : GuiElement(desc.x, desc.y, desc.width, desc.height, desc.title, this)
@@ -80,4 +77,4 @@ size_t Button::typeId() const noexcept
     return TypeId<Button>;
 }
 
-}
+GUI_NAMESPACE_END

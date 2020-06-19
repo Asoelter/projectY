@@ -2,8 +2,10 @@
 
 #include <util\ywin.h>
 
-namespace gui
-{
+#include "namespace.h"
+
+GUI_NAMESPACE_BEGIN
+
 Signal<> Keyboard::backKeyPressed{};
 Signal<> Keyboard::tabKeyPressed{};
 Signal<> Keyboard::enterKeyPressed{};
@@ -151,4 +153,5 @@ void Keyboard::emitKey(size_t keyCode)
         signals[keyCode]->emit();
     }
 }
-}
+
+GUI_NAMESPACE_END

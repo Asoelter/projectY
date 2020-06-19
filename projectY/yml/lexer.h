@@ -7,19 +7,24 @@
 #include <string>
 #include <vector>
 
+#include "namespace.h"
 #include "token.h"
+
+YML_NAMESPACE_BEGIN
 
 class Lexer
 {
 public:
-    using PolicyTableType = std::map<std::regex, std::unique_ptr<Token>>;
+    using PolicyTable = std::map<std::regex, std::unique_ptr<Token>>;
 
-    Lexer(const PolicyTableType& table);
+    Lexer(const PolicyTable& table);
 
     std::vector<Token> tokenize(const std::string& str);
 
 private:
-    PolicyTableType policyTable_;
+    PolicyTable policyTable_;
 };
+
+YML_NAMESPACE_END
 
 #endif //LEXER_H

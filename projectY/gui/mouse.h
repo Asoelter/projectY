@@ -3,8 +3,9 @@
 
 #include <containers/signal.h>
 
-namespace gui
-{
+#include "namespace.h"
+
+GUI_NAMESPACE_BEGIN
 
 class Window;
 
@@ -27,6 +28,6 @@ private:
     friend class Window;
 };
 
-}
+GUI_NAMESPACE_END
 
 #endif //MOUSE_H

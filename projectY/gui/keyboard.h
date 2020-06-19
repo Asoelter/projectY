@@ -6,8 +6,9 @@
 
 #include <containers/signal.h>
 
-namespace gui
-{
+#include "namespace.h"
+
+GUI_NAMESPACE_BEGIN
 
 class Window;
 
@@ -102,6 +103,6 @@ private:
 };
 
 
-}
+GUI_NAMESPACE_END
 
 #endif //KEYBOARD_H

@@ -5,4 +5,4 @@ project("yml")
 set(CMAKE_CXX_STANDARD 17)
 
 add_library(${PROJECT_NAME} lexer.h lexer.cpp
-                            token.h)
+                            token.h "namespace.h")

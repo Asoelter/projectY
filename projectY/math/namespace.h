@@ -1,0 +1,12 @@
+#ifndef MATH_NAMESPACE_H
+#define MATH_NAMESPACE_H
+
+#ifndef MATH_NAMESPACE_BEGIN
+#   define MATH_NAMESPACE_BEGIN namespace math{
+#endif //MATH_NAMESPACE_BEGIN
+
+#ifndef MATH_NAMESPACE_END
+#   define MATH_NAMESPACE_END }
+#endif //MATH_NAMESPACE_END
+
+#endif //MATH_NAMESPACE_H

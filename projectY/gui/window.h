@@ -13,9 +13,9 @@
 #include "button.h"
 #include "gui_element.h"
 #include "menu.h"
+#include "namespace.h"
 
-namespace gui
-{
+GUI_NAMESPACE_BEGIN
 
 struct WindowRect
 {
@@ -91,6 +91,7 @@ private:
     Menu                 menu_;
     bool                 open_;
 };
-}
+
+GUI_NAMESPACE_END
 
 #endif //WINDOW_H

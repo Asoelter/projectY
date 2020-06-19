@@ -1,15 +1,11 @@
 #include "menu.h"
-#include "menu.h"
-#include "menu.h"
-#include "menu.h"
 
 #include <algorithm>
 
 #include <util/id_generator.h>
 #include <util/type_id.h>
 
-namespace gui
-{
+GUI_NAMESPACE_BEGIN
     
 MenuItem::MenuItem(const std::string& text)
     : GuiElement(0, 0, 0, 0, text, this)
@@ -146,4 +142,4 @@ Menu::Menu(NullInit)
 {
 }
 
-}
+GUI_NAMESPACE_END
