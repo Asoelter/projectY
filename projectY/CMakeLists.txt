@@ -11,7 +11,7 @@ add_compile_definitions(NOMINMAX=1)
 add_compile_definitions(WIN32_LEAN_AND_MEAN=1)
 
 # Add source to this project's executable.
-add_executable (${PROJECT_NAME} WIN32 WinMain.cpp "math/namespace.h")
+add_executable (${PROJECT_NAME} WIN32 WinMain.cpp)
 
 function(addDirectory dir)
 	add_subdirectory(${dir})

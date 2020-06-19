@@ -3,6 +3,7 @@
 
 #include <limits>
 #include <string>
+#include <unordered_map>
 
 #include <util/pointer.h>
 #include <util/type_id.h>
@@ -28,76 +29,32 @@ public:
     }
 
     GuiElement(const GuiElement& rhs) = delete;
-
-    GuiElement(GuiElement&& rhs)
-    {
-        xPos_ = rhs.xPos_;
-        yPos_ = rhs.yPos_;
-        width_ = rhs.width_;
-        height_ = rhs.height_;
-        name_ = std::move(rhs.name_);
-        typeId_ = rhs.typeId();
-        elements_ = std::move(rhs.elements_);
-
-        rhs.xPos_ = 0;
-        rhs.yPos_ = 0;
-        rhs.width_ = 0;
-        rhs.height_ = 0;
-        rhs.name_.clear();
-        rhs.elements_.clear();
-    }
-
+    GuiElement(GuiElement&& rhs);
     virtual ~GuiElement() = default;
 
     GuiElement& operator=(const GuiElement& rhs) = delete;
-
-    void operator=(GuiElement&& rhs)
-    {
-        xPos_ = rhs.xPos_;
-        yPos_ = rhs.yPos_;
-        width_ = rhs.width_;
-        height_ = rhs.height_;
-        name_ = std::move(rhs.name_);
-        typeId_ = rhs.typeId();
-        elements_ = std::move(rhs.elements_);
-
-        rhs.xPos_ = 0;
-        rhs.yPos_ = 0;
-        rhs.width_ = 0;
-        rhs.height_ = 0;
-        rhs.name_.clear();
-        rhs.elements_.clear();
-    }
+    void operator=(GuiElement&& rhs);
 
     [[nodiscard]]
-    virtual UINT xPos() const noexcept { return xPos_; }
+    virtual UINT xPos() const noexcept;
 
     [[nodiscard]]
-    virtual UINT yPos() const noexcept { return yPos_; }
+    virtual UINT yPos() const noexcept;
 
     [[nodiscard]]
-    virtual UINT width() const noexcept { return width_; }
+    virtual UINT width() const noexcept;
 
     [[nodiscard]]
-    virtual UINT height() const noexcept { return height_; }
+    virtual UINT height() const noexcept;
 
     [[nodiscard]]
-    virtual std::string name() const noexcept { return name_; }
+    virtual std::string name() const noexcept;
 
     [[nodiscard]]
     virtual size_t typeId() const noexcept = 0;
 
     [[nodiscard]]
-    virtual NonOwningPtr<GuiElement> element(const std::string& name)
-    {
-        if (elements_.find(name) == elements_.end())
-        {
-            return nullptr;
-        }
-
-        auto result = elements_[name];
-        return result;
-    }
+    virtual NonOwningPtr<GuiElement> element(const std::string& name);
 
     template<typename T>
     [[nodiscard]]
