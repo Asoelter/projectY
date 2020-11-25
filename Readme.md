@@ -1,4 +1,4 @@
-# ProjectY
+# Windows User Interface
 
 This is a repository for an experimental gui library for windows. 
 This library aims to provide a simple user interface for 
@@ -19,6 +19,6 @@ SDK and desktop development with c++ workload.
 
 ## Installation instructions
 
-1. clone the repository from https://github.com/Asoelter/projectY.git
+1. clone the repository from https://github.com/Asoelter/wui.git
 2. open the folder containing projectY in visual studio 
 3. build the project
