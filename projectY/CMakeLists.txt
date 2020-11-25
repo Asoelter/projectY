@@ -11,13 +11,13 @@ add_compile_definitions(NOMINMAX=1)
 add_compile_definitions(WIN32_LEAN_AND_MEAN=1)
 
 # Add source to this project's executable.
-add_executable (${PROJECT_NAME} WIN32 WinMain.cpp)
+add_library (${PROJECT_NAME} INTERFACE)
 
 function(addDirectory dir)
 	add_subdirectory(${dir})
 	include_directories(${dir})
-	target_link_libraries(${PROJECT_NAME} ${dir})
-	target_include_directories(${PROJECT_NAME} PUBLIC ${dir})
+	target_link_libraries(${PROJECT_NAME} INTERFACE ${dir})
+	target_include_directories(${PROJECT_NAME} INTERFACE ${dir})
 endfunction()
 
 addDirectory(containers)
@@ -27,5 +27,5 @@ addDirectory(math)
 addDirectory(util)
 addDirectory(yml)
 
-target_link_libraries(${PROJECT_NAME} d3d11.lib)
-target_link_libraries(${PROJECT_NAME} D3DCompiler.lib)
+target_link_libraries(${PROJECT_NAME} INTERFACE d3d11.lib)
+target_link_libraries(${PROJECT_NAME} INTERFACE D3DCompiler.lib)

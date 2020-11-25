@@ -12,4 +12,4 @@ add_library(${PROJECT_NAME} window.h		window.cpp
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../)
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
