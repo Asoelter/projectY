@@ -5,9 +5,9 @@
 #include <string>
 #include <unordered_map>
 
-#include <util/pointer.h>
-#include <util/type_id.h>
-#include <util/ywin.h>
+#include "../util/pointer.h"
+#include "../util/type_id.h"
+#include "../util/ywin.h"
 
 #include "namespace.h"
 

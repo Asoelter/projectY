@@ -5,10 +5,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include <containers/signal.h>
+//#include <containers/signal.h>
+#include "../containers/signal.h"
 
-#include <util/type_id.h>
-#include <util/ywin.h>
+#include "../util/ywin.h"
 
 #include "button.h"
 #include "gui_element.h"

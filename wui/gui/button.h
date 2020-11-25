@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include <containers/signal.h>
+#include "../containers/signal.h"
 
-#include <util/ywin.h>
+#include "../util/ywin.h"
 
 #include "gui_element.h"
 #include "namespace.h"
