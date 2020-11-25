@@ -25,7 +25,6 @@ addDirectory(graphics)
 addDirectory(gui)
 addDirectory(math)
 addDirectory(util)
-addDirectory(yml)
 
 target_link_libraries(${PROJECT_NAME} INTERFACE d3d11.lib)
 target_link_libraries(${PROJECT_NAME} INTERFACE D3DCompiler.lib)
