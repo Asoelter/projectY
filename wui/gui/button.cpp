@@ -21,6 +21,7 @@ Button::Button(Button&& rhs) noexcept
     , id_(rhs.id_)
 {
     elements_ = std::move(rhs.elements_);
+    pushed = std::move(rhs.pushed);
 
     rhs.xPos_ = 0;
     rhs.yPos_ = 0;
@@ -44,6 +45,7 @@ void Button::operator=(Button&& rhs) noexcept
     width_  = rhs.width_;
     height_ = rhs.height_;
     name_   = std::move(rhs.name_);
+    pushed  = std::move(rhs.pushed);
 
     rhs.xPos_   = 0;
     rhs.yPos_   = 0;

@@ -1,5 +1,8 @@
 #include "window.h"
 
+#include <cassert>
+
+
 #include "keyboard.h"
 #include "mouse.h"
 
@@ -71,10 +74,11 @@ void Window::update() noexcept
 void Window::attach(Button&& button) noexcept
 {
     button.attachTo(hwnd_);
+    const auto name = button.name();
 
     buttons_.push_back(std::move(button));
-    auto& backButton = buttons_.back();
-    elements_[backButton.name()] = &backButton;
+    //elements_[name] = &buttons_.back();
+    elements_[name] = (buttons_.data() + (buttons_.size() - 1));
 }
 
 void Window::attach(Menu&& menu) noexcept
@@ -82,6 +86,26 @@ void Window::attach(Menu&& menu) noexcept
     menu_ = std::move(menu);
     elements_[menu.name()] = &menu;
     SetMenu(hwnd_, menu.handle());
+}
+
+void Window::remove(const std::string& name)
+{
+    const auto element = elements_[name];
+    const auto elementId = element->typeId();
+
+    if(elementId == TypeId<Button>)
+    {
+        (void)std::remove_if(buttons_.begin(), buttons_.end(), [&name](const Button& b)
+        {
+            return b.name() == name;
+        });
+    }
+    else
+    {
+        assert(false);
+    }
+
+    elements_.erase(name);
 }
 
 LRESULT Window::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept

@@ -5,10 +5,9 @@
 #include <unordered_map>
 #include <vector>
 
-//#include <containers/signal.h>
-#include "../containers/signal.h"
+#include <containers/signal.h>
 
-#include "../util/ywin.h"
+#include <util/ywin.h>
 
 #include "button.h"
 #include "gui_element.h"
@@ -55,6 +54,7 @@ public:
 
     void attach(Button&& button) noexcept;
     void attach(Menu&& menu) noexcept;
+    void remove(const std::string& name);
 
     LRESULT WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept;
 

@@ -9,7 +9,7 @@
 
 inline std::wstring shaderSource(const std::wstring fileName)
 {
-    return L"../../../../../projectY/res/shaders/" + fileName;
+    return L"../../../../../pitch_frontend/third_party/wui/wui/res/shaders/" + fileName;
 }
 
 class VertexShader
