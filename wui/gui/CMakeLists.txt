@@ -8,7 +8,7 @@ add_library(${PROJECT_NAME} window.h		window.cpp
 							mouse.h			mouse.cpp 
 							menu.h			menu.cpp 
 							gui_element.h	gui_element.cpp
-							namespace.h )
+							namespace.h  "parent_window.h" "parent_window.cpp" )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../)
 

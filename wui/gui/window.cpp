@@ -77,7 +77,6 @@ void Window::attach(Button&& button) noexcept
     const auto name = button.name();
 
     buttons_.push_back(std::move(button));
-    //elements_[name] = &buttons_.back();
     elements_[name] = (buttons_.data() + (buttons_.size() - 1));
 }
 

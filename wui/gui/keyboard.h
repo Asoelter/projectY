@@ -90,6 +90,7 @@ private:
     static std::array<Signal<>*, 256> signals;
 
     friend class Window;
+    friend class ParentWindow;
 
     enum KeyCode
     {

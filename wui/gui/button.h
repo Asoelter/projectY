@@ -17,8 +17,8 @@ class Button : public GuiElement
 public:
     struct Descriptor
     {
-        Descriptor(UINT _x, UINT _y, UINT _w, UINT _h, const std::string& _t = "") 
-            : x(_x), y(_y), width(_w), height(_h), title(_t) {}
+        Descriptor(UINT _x, UINT _y, UINT _w, UINT _h, std::string _t = "") 
+            : x(_x), y(_y), width(_w), height(_h), title(std::move(_t)) {}
         UINT x;
         UINT y;
         UINT width;
